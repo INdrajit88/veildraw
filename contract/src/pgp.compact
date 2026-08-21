@@ -1,0 +1,85 @@
+// Private Giveaway Platform (PGP) Smart Contract
+// Built for Midnight Network
+
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+export enum State {
+  REGISTRATION_OPEN,
+  DRAW_PENDING,
+  COMPLETED,
+  CANCELLED
+}
+
+export ledger giveawayState: State;
+
+export ledger title: Maybe<Opaque<"string">>;
+
+export ledger prizeDetails: Maybe<Opaque<"string">>;
+
+export ledger organizerPk: Bytes<32>;
+
+export ledger entryCount: Counter;
+
+export ledger entryAccumulator: Bytes<32>;
+
+export ledger winningCommitment: Bytes<32>;
+
+export ledger winnerClaimed: Boolean;
+
+constructor() {
+  giveawayState = State.REGISTRATION_OPEN;
+  title = none<Opaque<"string">>();
+  prizeDetails = none<Opaque<"string">>();
+  organizerPk = pad(32, "");
+  entryAccumulator = pad(32, "pgp:init");
+  winningCommitment = pad(32, "");
+  winnerClaimed = false;
+  entryCount.increment(1);
+}
+
+witness localSecretKey(): Bytes<32>;
+
+witness participantNonce(): Bytes<32>;
+
+export circuit createGiveaway(newTitle: Opaque<"string">, newPrize: Opaque<"string">): [] {
+  assert(giveawayState == State.REGISTRATION_OPEN, "Giveaway is already initialized or closed");
+  organizerPk = disclose(publicKey(localSecretKey()));
+  title = disclose(some<Opaque<"string">>(newTitle));
+  prizeDetails = disclose(some<Opaque<"string">>(newPrize));
+}
+
+export circuit enterGiveaway(entryCommitment: Bytes<32>): [] {
+  assert(giveawayState == State.REGISTRATION_OPEN, "Giveaway registration is closed");
+  const currentCount = entryCount as Field as Bytes<32>;
+  const computedCommitment = persistentHash<Vector<3, Bytes<32>>>([pad(32, "pgp:entry:"), currentCount, entryCommitment]);
+  entryAccumulator = disclose(persistentHash<Vector<2, Bytes<32>>>([entryAccumulator, computedCommitment]));
+  entryCount.increment(1);
+}
+
+export circuit closeAndSelectWinner(winnerCommitment: Bytes<32>): [] {
+  assert(giveawayState == State.REGISTRATION_OPEN, "Giveaway registration must be open to draw winner");
+  assert(organizerPk == publicKey(localSecretKey()), "Only the giveaway organizer can close and select winner");
+  winningCommitment = disclose(winnerCommitment);
+  giveawayState = State.DRAW_PENDING;
+}
+
+export circuit claimPrize(ticketSecret: Bytes<32>): [] {
+  assert(giveawayState == State.DRAW_PENDING, "Giveaway is not in draw pending state");
+  assert(winnerClaimed == false, "Prize has already been claimed");
+  const computedWinnerCommitment = persistentHash<Vector<3, Bytes<32>>>([pad(32, "pgp:claim:"), ticketSecret, localSecretKey()]);
+  assert(disclose(computedWinnerCommitment) == winningCommitment, "Provided ticket secret does not match winning commitment");
+  winnerClaimed = true;
+  giveawayState = State.COMPLETED;
+}
+
+export circuit cancelGiveaway(): [] {
+  assert(organizerPk == publicKey(localSecretKey()), "Only the giveaway organizer can cancel the giveaway");
+  assert(giveawayState != State.COMPLETED, "Cannot cancel a completed giveaway");
+  giveawayState = State.CANCELLED;
+}
+
+export circuit publicKey(sk: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "pgp:pk:"), sk]);
+}
