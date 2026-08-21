@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "NEXT_PUBLIC_NETWORK_ID=preview npm run build",
-  "outputDirectory": "out",
-  "framework": "other"
+  "framework": "nextjs"
 }
