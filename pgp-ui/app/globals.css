@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-body;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.47;
+    letter-spacing: -0.374px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: rgba(0, 102, 204, 0.2);
+  }
+}
+
+@layer components {
+  /* ── Typography ladder (DESIGN.md §Typography) ─────────────────────── */
+
+  .t-hero {
+    @apply font-display font-semibold text-ink;
+    font-size: 56px;
+    line-height: 1.07;
+    letter-spacing: -0.28px;
+  }
+
+  .t-display-lg {
+    @apply font-display font-semibold text-ink;
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+
+  .t-display-md {
+    @apply font-sans font-semibold text-ink;
+    font-size: 34px;
+    line-height: 1.47;
+    letter-spacing: -0.374px;
+  }
+
+  .t-lead {
+    @apply font-display font-normal;
+    font-size: 28px;
+    line-height: 1.14;
+    letter-spacing: 0.196px;
+  }
+
+  .t-lead-airy {
+    @apply font-sans;
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .t-tagline {
+    @apply font-display font-semibold;
+    font-size: 21px;
+    line-height: 1.19;
+    letter-spacing: 0.231px;
+  }
+
+  .t-body-strong {
+    @apply font-sans font-semibold;
+    font-size: 17px;
+    line-height: 1.24;
+    letter-spacing: -0.374px;
+  }
+
+  .t-body {
+    @apply font-sans font-normal;
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.374px;
+  }
+
+  .t-dense-link {
+    @apply font-sans font-normal;
+    font-size: 17px;
+    line-height: 2.41;
+    letter-spacing: 0;
+  }
+
+  .t-caption {
+    @apply font-sans font-normal;
+    font-size: 14px;
+    line-height: 1.43;
+    letter-spacing: -0.224px;
+  }
+
+  .t-caption-strong {
+    @apply font-sans font-semibold;
+    font-size: 14px;
+    line-height: 1.29;
+    letter-spacing: -0.224px;
+  }
+
+  .t-button-large {
+    @apply font-sans;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .t-button-utility {
+    @apply font-sans font-normal;
+    font-size: 14px;
+    line-height: 1.29;
+    letter-spacing: -0.224px;
+  }
+
+  .t-fine-print {
+    @apply font-sans font-normal;
+    font-size: 12px;
+    line-height: 1.3;
+    letter-spacing: -0.12px;
+  }
+
+  .t-nav-link {
+    @apply font-sans font-normal;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: -0.12px;
+  }
+
+  /* ── Surfaces & chrome ─────────────────────────────────────────────── */
+
+  /* Frosted-glass strip: parchment at 80% + blur (sub-nav, sticky bars) */
+  .frosted {
+    background: rgba(245, 245, 247, 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  /* System-wide press micro-interaction */
+  .press {
+    transition: transform 0.15s ease;
+  }
+  .press:active {
+    transform: scale(0.95);
+  }
+
+  /* The single drop-shadow in the system — product renders only */
+  .product-shadow {
+    box-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0;
+  }
+
+  /* Terminal/data readout on dark tiles */
+  .data-block {
+    @apply rounded-sm bg-tile-3 font-mono;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+}
+
+/* ── Responsive type scale (DESIGN.md §Responsive Behavior) ──────────── */
+@media (max-width: 1068px) {
+  .t-hero {
+    font-size: 40px;
+    letter-spacing: 0;
+  }
+}
+@media (max-width: 640px) {
+  .t-hero {
+    font-size: 34px;
+  }
+  .t-display-lg {
+    font-size: 30px;
+  }
+  .t-lead {
+    font-size: 22px;
+  }
+}
+@media (max-width: 419px) {
+  .t-hero {
+    font-size: 28px;
+  }
+}
+
+/* ── Motion utilities (animated frontend) ────────────────────────────── */
+.kenburns {
+  animation: kenburns 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes kenburns {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.12) translate3d(2%, -2%, 0);
+  }
+}
+
+.marquee-track {
+  animation: marquee 30s linear infinite;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.float-slow {
+  animation: floatY 6s ease-in-out infinite;
+}
+.float-slower {
+  animation: floatY 8s ease-in-out infinite reverse;
+}
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

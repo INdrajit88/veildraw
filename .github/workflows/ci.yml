@@ -1,0 +1,48 @@
+name: Midnight PGP DApp CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master, dev ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Contract Typecheck
+        run: npm run typecheck --workspace=@midnight-ntwrk/pgp-contract
+
+      - name: Contract Lint
+        run: npm run lint --workspace=@midnight-ntwrk/pgp-contract
+
+      - name: Run Contract Unit Tests
+        run: npm run test --workspace=@midnight-ntwrk/pgp-contract -- --run
+
+      - name: Build Contract Package
+        run: npm run build --workspace=@midnight-ntwrk/pgp-contract
+
+      - name: Build API Package
+        run: npm run build --workspace=@midnight-ntwrk/pgp-api
+
+      - name: Build CLI Package
+        run: npm run build --workspace=@midnight-ntwrk/pgp-cli
+
+      - name: Build Web UI Package
+        run: npm run build --workspace=@midnight-ntwrk/pgp-ui
