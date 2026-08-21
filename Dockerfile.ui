@@ -1,0 +1,32 @@
+# Multi-stage Dockerfile for PGP Web UI
+
+FROM node:24-alpine AS builder
+
+WORKDIR /app
+
+# Copy root workspace configurations
+COPY package.json package-lock.json ./
+COPY contract/package.json ./contract/
+COPY api/package.json ./api/
+COPY bboard-cli/package.json ./pgp-cli/
+COPY bboard-ui/package.json ./pgp-ui/
+
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Build packages
+RUN npm run compact --workspace=@midnight-ntwrk/pgp-contract
+RUN npm run build --workspace=@midnight-ntwrk/pgp-contract
+RUN npm run build --workspace=@midnight-ntwrk/pgp-api
+RUN npm run build --workspace=@midnight-ntwrk/pgp-ui
+
+# Production runtime stage using Nginx
+FROM nginx:alpine AS runner
+
+COPY --from=builder /app/pgp-ui/out /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
