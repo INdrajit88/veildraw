@@ -12,7 +12,6 @@
 
 **[Live Demo](https://veildraw-pgp-ui.vercel.app/) • [Demo Video](https://youtu.be/meczmnhMPWo) • [Preview Faucet](https://faucet.preview.midnight.network/)**
 
-[![Watch Demo Video](https://img.youtube.com/vi/meczmnhMPWo/maxresdefault.jpg)](https://youtu.be/meczmnhMPWo)
 
 </div>
 
