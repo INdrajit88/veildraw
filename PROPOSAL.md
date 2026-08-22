@@ -78,7 +78,7 @@ Participant secret key, nonce, and ticket secret are stored locally in a LevelDB
 | `pgp-ui/` | Glassmorphism React web DApp |
 | `pgp-cli/` | Headless interactive CLI with preprod/preview/standalone configs |
 | `docs/screenshots/` | End-to-end visual walkthrough |
-| Live deployment | `https://pgpapp.vercel.app/` |
+| Live deployment | `https://veildraw-pgp-ui.vercel.app/` |
 
 ## Evaluation
 
