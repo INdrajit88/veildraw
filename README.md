@@ -10,7 +10,17 @@
 [![Midnight Preview](https://img.shields.io/badge/Midnight-Preview_Testnet-8B5CF6?style=flat-square)](https://docs.midnight.network)
 [![Rise In](https://img.shields.io/badge/Rise_In-New_Moon_to_Full_·_Level_3-0ea5e9?style=flat-square)](https://www.risein.com/programs/new-moon-to-full-monthly-moonshots-on-midnight)
 
-**[Live Demo](https://veildraw-pgp-ui.vercel.app/) • [Demo Video](https://youtu.be/meczmnhMPWo) • [Preview Faucet](https://faucet.preview.midnight.network/)**
+### 🌐 Live Demo & Quick Links
+
+| Resource | Link | Description |
+|:---|:---|:---|
+| **Live dApp (Production)** | [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) | Next.js 15 ZK giveaway dApp on Midnight Preview |
+| **Giveaway Portal** | [veildraw-pgp-ui.vercel.app/giveaways](https://veildraw-pgp-ui.vercel.app/giveaways) | Browse & enter active zero-knowledge giveaways |
+| **Organizer Console** | [veildraw-pgp-ui.vercel.app/organizer](https://veildraw-pgp-ui.vercel.app/organizer) | Create giveaways & draw winners via ZK witness |
+| **Winner Verification** | [veildraw-pgp-ui.vercel.app/verify](https://veildraw-pgp-ui.vercel.app/verify) | Verify ticket secrets & claim prizes on-chain |
+| **Analytics & Telemetry** | [veildraw-pgp-ui.vercel.app/analytics](https://veildraw-pgp-ui.vercel.app/analytics) | Real-time indexer stats & proof performance |
+| **Video Walkthrough** | [YouTube Demo](https://youtu.be/meczmnhMPWo) | End-to-end walkthrough video |
+| **Midnight Preview Faucet** | [faucet.preview.midnight.network](https://faucet.preview.midnight.network/) | Get testnet tNIGHT tokens |
 
 
 </div>
@@ -29,23 +39,29 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 
 ## Contract Address & Deployment
 
-| Network | Contract Address | Status |
-|---------|------------------|--------|
-| **Preview** | `445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1` | **Active** — live giveaway on-chain |
-| Preprod | — | Dust-ledger sync exceeds laptop RAM; Preview used instead |
+| Network | Contract Address | Status | Live dApp / Explorer |
+|:---|:---|:---|:---|
+| **Midnight Preview** | [`445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1`](https://veildraw-pgp-ui.vercel.app/giveaways) | **Active** — Live on Preview | [Open in VeilDraw Preview dApp](https://veildraw-pgp-ui.vercel.app/giveaways) |
+| Midnight Preprod | — | Standby | Dust-ledger sync exceeds laptop RAM; Preview used |
 
-| Deployment fact | Value |
-|-----------------|-------|
-| Active giveaway | `PGP Launch Giveaway` (5,000 tNIGHT prize) |
-| Deploy transaction | `04bc1dfc7570ba3835dbf8ac940ecc52e2997fa535c39ea6faf463a3b1466443` |
-| Verified at block | 511,326 (Preview indexer `contractAction`) |
-| Organizer wallet | `mn_addr_preview1d92nezft59hhefh23eaepu627w90537hce8p0g629vescrymuxrq8wc8fq` |
+### On-Chain Deployment Details (Preview Testnet)
 
-### Verify On-Chain (Preview)
+| Deployment Fact | Value | Verification Link |
+|:---|:---|:---|
+| **Active Giveaway** | `PGP Launch Giveaway` (5,000 tNIGHT prize) | [View in Live Portal](https://veildraw-pgp-ui.vercel.app/giveaways) |
+| **Contract Address** | `445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1` | [Open in Preview App](https://veildraw-pgp-ui.vercel.app/giveaways) |
+| **Deploy Transaction** | `04bc1dfc7570ba3835dbf8ac940ecc52e2997fa535c39ea6faf463a3b1466443` | [Query via Indexer GraphQL](https://indexer.preview.midnight.network/api/v4/graphql) |
+| **Verified Block** | Block `511,326` (Preview indexer `contractAction`) | [Preview Indexer API](https://indexer.preview.midnight.network/api/v4/graphql) |
+| **Organizer Wallet** | `mn_addr_preview1d92nezft59hhefh23eaepu627w90537hce8p0g629vescrymuxrq8wc8fq` | [Preview Faucet Portal](https://faucet.preview.midnight.network/) |
 
-- [Preview Node RPC](https://rpc.preview.midnight.network)
-- [Preview Indexer GraphQL](https://indexer.preview.midnight.network/api/v4/graphql)
-- [Preview Faucet Portal](https://faucet.preview.midnight.network/)
+### Network Infrastructure & Verification Endpoints
+
+| Service | Endpoint URL | Purpose |
+|:---|:---|:---|
+| **Preview Node RPC** | [`https://rpc.preview.midnight.network`](https://rpc.preview.midnight.network) | Remote RPC node for state & tx submission |
+| **Preview Indexer GraphQL** | [`https://indexer.preview.midnight.network/api/v4/graphql`](https://indexer.preview.midnight.network/api/v4/graphql) | Live query interface for on-chain contract state |
+| **Preview Indexer WebSocket** | `wss://indexer.preview.midnight.network/api/v4/graphql/ws` | Real-time state subscription stream |
+| **Preview Faucet Portal** | [`https://faucet.preview.midnight.network/`](https://faucet.preview.midnight.network/) | Testnet tNIGHT faucet for wallet funding |
 
 ---
 
