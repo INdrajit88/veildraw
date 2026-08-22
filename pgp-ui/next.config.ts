@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const nextConfig: NextConfig = {
   output: 'export',
+  outputFileTracingRoot: path.resolve(__dirname, '..'),
   trailingSlash: true,
   images: {
     unoptimized: true,
