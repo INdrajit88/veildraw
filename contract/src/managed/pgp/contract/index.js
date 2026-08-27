@@ -105,7 +105,7 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('createGiveaway',
                                      'argument 1 (as invoked from Typescript)',
-                                     'pgp.compact line 46 char 1',
+                                     'pgp.compact line 68 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
@@ -135,14 +135,14 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('enterGiveaway',
                                      'argument 1 (as invoked from Typescript)',
-                                     'pgp.compact line 53 char 1',
+                                     'pgp.compact line 79 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(entryCommitment_0.buffer instanceof ArrayBuffer && entryCommitment_0.BYTES_PER_ELEMENT === 1 && entryCommitment_0.length === 32)) {
           __compactRuntime.typeError('enterGiveaway',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'pgp.compact line 53 char 1',
+                                     'pgp.compact line 79 char 1',
                                      'Bytes<32>',
                                      entryCommitment_0)
         }
@@ -171,14 +171,14 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('closeAndSelectWinner',
                                      'argument 1 (as invoked from Typescript)',
-                                     'pgp.compact line 61 char 1',
+                                     'pgp.compact line 88 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(winnerCommitment_0.buffer instanceof ArrayBuffer && winnerCommitment_0.BYTES_PER_ELEMENT === 1 && winnerCommitment_0.length === 32)) {
           __compactRuntime.typeError('closeAndSelectWinner',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'pgp.compact line 61 char 1',
+                                     'pgp.compact line 88 char 1',
                                      'Bytes<32>',
                                      winnerCommitment_0)
         }
@@ -207,14 +207,14 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('claimPrize',
                                      'argument 1 (as invoked from Typescript)',
-                                     'pgp.compact line 68 char 1',
+                                     'pgp.compact line 97 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(ticketSecret_0.buffer instanceof ArrayBuffer && ticketSecret_0.BYTES_PER_ELEMENT === 1 && ticketSecret_0.length === 32)) {
           __compactRuntime.typeError('claimPrize',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'pgp.compact line 68 char 1',
+                                     'pgp.compact line 97 char 1',
                                      'Bytes<32>',
                                      ticketSecret_0)
         }
@@ -242,7 +242,7 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('cancelGiveaway',
                                      'argument 1 (as invoked from Typescript)',
-                                     'pgp.compact line 77 char 1',
+                                     'pgp.compact line 107 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
@@ -468,22 +468,6 @@ export class Contract {
                                                  value: __compactRuntime.StateValue.newCell({ value: _descriptor_2.toValue(false),
                                                                                               alignment: _descriptor_2.alignment() }).encode() } },
                                        { ins: { cached: false, n: 1 } }]);
-    const tmp_2 = 1n;
-    __compactRuntime.queryLedgerState(context,
-                                      partialProofData,
-                                      [
-                                       { idx: { cached: false,
-                                                pushPath: true,
-                                                path: [
-                                                       { tag: 'value',
-                                                         value: { value: _descriptor_12.toValue(4n),
-                                                                  alignment: _descriptor_12.alignment() } }] } },
-                                       { addi: { immediate: parseInt(__compactRuntime.valueToBigInt(
-                                                              { value: _descriptor_5.toValue(tmp_2),
-                                                                alignment: _descriptor_5.alignment() }
-                                                                .value
-                                                            )) } },
-                                       { ins: { cached: true, n: 1 } }]);
     state_0.data = new __compactRuntime.ChargedState(context.currentQueryContext.state.state);
     return {
       currentContractState: state_0,
@@ -508,7 +492,7 @@ export class Contract {
     if (!(result_0.buffer instanceof ArrayBuffer && result_0.BYTES_PER_ELEMENT === 1 && result_0.length === 32)) {
       __compactRuntime.typeError('localSecretKey',
                                  'return value',
-                                 'pgp.compact line 42 char 1',
+                                 'pgp.compact line 61 char 1',
                                  'Bytes<32>',
                                  result_0)
     }
@@ -534,6 +518,20 @@ export class Contract {
                             ===
                             0,
                             'Giveaway is already initialized or closed');
+    __compactRuntime.assert(this._equal_0(_descriptor_4.fromValue(__compactRuntime.queryLedgerState(context,
+                                                                                                    partialProofData,
+                                                                                                    [
+                                                                                                     { dup: { n: 0 } },
+                                                                                                     { idx: { cached: false,
+                                                                                                              pushPath: false,
+                                                                                                              path: [
+                                                                                                                     { tag: 'value',
+                                                                                                                       value: { value: _descriptor_12.toValue(1n),
+                                                                                                                                alignment: _descriptor_12.alignment() } }] } },
+                                                                                                     { popeq: { cached: false,
+                                                                                                                result: undefined } }]).value),
+                                          this._none_0()),
+                            'Giveaway details are already set');
     const tmp_0 = this._publicKey_0(this._localSecretKey_0(context,
                                                            partialProofData));
     __compactRuntime.queryLedgerState(context,
@@ -599,7 +597,7 @@ export class Contract {
                                                                                                                                                       alignment: _descriptor_12.alignment() } }] } },
                                                                                                                            { popeq: { cached: true,
                                                                                                                                       result: undefined } }]).value),
-                                                                'pgp.compact line 55 char 24');
+                                                                'pgp.compact line 81 char 24');
     const computedCommitment_0 = this._persistentHash_0([new Uint8Array([112, 103, 112, 58, 101, 110, 116, 114, 121, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
                                                          currentCount_0,
                                                          entryCommitment_0]);
@@ -660,7 +658,7 @@ export class Contract {
                             ===
                             0,
                             'Giveaway registration must be open to draw winner');
-    __compactRuntime.assert(this._equal_0(_descriptor_1.fromValue(__compactRuntime.queryLedgerState(context,
+    __compactRuntime.assert(this._equal_1(_descriptor_1.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                                     partialProofData,
                                                                                                     [
                                                                                                      { dup: { n: 0 } },
@@ -732,7 +730,7 @@ export class Contract {
                                                                ticketSecret_0,
                                                                this._localSecretKey_0(context,
                                                                                       partialProofData)]);
-    __compactRuntime.assert(this._equal_1(computedWinnerCommitment_0,
+    __compactRuntime.assert(this._equal_2(computedWinnerCommitment_0,
                                           _descriptor_1.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                                     partialProofData,
                                                                                                     [
@@ -769,7 +767,7 @@ export class Contract {
     return [];
   }
   _cancelGiveaway_0(context, partialProofData) {
-    __compactRuntime.assert(this._equal_2(_descriptor_1.fromValue(__compactRuntime.queryLedgerState(context,
+    __compactRuntime.assert(this._equal_3(_descriptor_1.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                                     partialProofData,
                                                                                                     [
                                                                                                      { dup: { n: 0 } },
@@ -816,7 +814,16 @@ export class Contract {
                                    sk_0]);
   }
   _equal_0(x0, y0) {
-    if (!x0.every((x, i) => y0[i] === x)) { return false; }
+    {
+      let x1 = x0.is_some;
+      let y1 = y0.is_some;
+      if (x1 !== y1) { return false; }
+    }
+    {
+      let x1 = x0.value;
+      let y1 = y0.value;
+      if (x1 !== y1) { return false; }
+    }
     return true;
   }
   _equal_1(x0, y0) {
@@ -824,6 +831,10 @@ export class Contract {
     return true;
   }
   _equal_2(x0, y0) {
+    if (!x0.every((x, i) => y0[i] === x)) { return false; }
+    return true;
+  }
+  _equal_3(x0, y0) {
     if (!x0.every((x, i) => y0[i] === x)) { return false; }
     return true;
   }
@@ -969,7 +980,7 @@ export const pureCircuits = {
     if (!(sk_0.buffer instanceof ArrayBuffer && sk_0.BYTES_PER_ELEMENT === 1 && sk_0.length === 32)) {
       __compactRuntime.typeError('publicKey',
                                  'argument 1',
-                                 'pgp.compact line 83 char 1',
+                                 'pgp.compact line 114 char 1',
                                  'Bytes<32>',
                                  sk_0)
     }
