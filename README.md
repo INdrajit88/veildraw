@@ -15,9 +15,9 @@
 
 | Resource | Link | Description |
 |:---|:---|:---|
-| **Live dApp — Production** | [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) | Next.js 15 ZK giveaway dApp — Midnight **Preview** Testnet |
-| **Live dApp — Preprod** | [veildraw-pgp-ui-git-preprod.vercel.app](https://veildraw-pgp-ui-git-preprod-indrajit88s-projects.vercel.app/) | Same dApp — Midnight **Preprod** Testnet |
+| **Live dApp** | [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) | Next.js 15 ZK giveaway dApp on Midnight Preview |
 | **Official X (Twitter)** | [@VeilDraww](https://x.com/VeilDraww) | Official project updates & announcements |
+
 | **Giveaway Portal** | [veildraw-pgp-ui.vercel.app/giveaways](https://veildraw-pgp-ui.vercel.app/giveaways) | Browse & enter active zero-knowledge giveaways |
 | **Organizer Console** | [veildraw-pgp-ui.vercel.app/organizer](https://veildraw-pgp-ui.vercel.app/organizer) | Create giveaways & draw winners via ZK witness |
 | **Winner Verification** | [veildraw-pgp-ui.vercel.app/verify](https://veildraw-pgp-ui.vercel.app/verify) | Verify ticket secrets & claim prizes on-chain |
@@ -45,8 +45,9 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 
 | Network | Contract Address | Status | Live dApp / Explorer |
 |:---|:---|:---|:---|
-| **Midnight Preview** | [`0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba`](https://veildraw-pgp-ui.vercel.app/giveaways) | **Active** — Live on Preview Testnet | [Open in VeilDraw Preview dApp](https://veildraw-pgp-ui.vercel.app/giveaways) |
-| **Midnight Preprod** | [`0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba`](https://veildraw-pgp-ui-git-preprod-indrajit88s-projects.vercel.app/giveaways) | **Deployed** — Preprod environment live on Vercel | [Open in VeilDraw Preprod dApp](https://veildraw-pgp-ui-git-preprod-indrajit88s-projects.vercel.app/) |
+| **Midnight Preview** | [`0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba`](https://veildraw-pgp-ui.vercel.app/giveaways) | **Active & Live** | [Open in VeilDraw Preview dApp](https://veildraw-pgp-ui.vercel.app/giveaways) |
+| **Midnight Preprod** | Standby | *Preprod dust-ledger sync exceeds RAM limits on local hardware; Preview is the primary live testnet.* | [Preview Indexer API](https://indexer.preview.midnight.network/api/v4/graphql) |
+
 
 ### On-Chain Deployment Details (Preview Testnet)
 
@@ -236,12 +237,10 @@ npm test --workspace=@midnight-ntwrk/pgp-contract -- --run
 
 ### CI/CD
 
-**CI** runs on every push to `main`/`dev`/`preprod` and every PR: checkout → Node 24 → install → contract typecheck → contract lint → unit tests → build contract, API, CLI, and UI workspaces. The UI build step uses `NEXT_PUBLIC_NETWORK_ID=preview` on `main` and `NEXT_PUBLIC_NETWORK_ID=preprod` on the `preprod` branch.
+**CI** runs on every push to `main`/`dev` and every PR: checkout → Node 24 → install → contract typecheck → contract lint → unit tests → build contract, API, CLI, and UI workspaces.
 
-| Branch | Environment | Vercel URL | Network |
-|:---|:---|:---|:---|
-| `main` | Production | [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) | Midnight Preview Testnet |
-| `preprod` | Preprod | [veildraw-pgp-ui-git-preprod.vercel.app](https://veildraw-pgp-ui-git-preprod-indrajit88s-projects.vercel.app/) | Midnight Preprod Testnet |
+**CD** deploys the UI to Vercel on every push to `main` (`vercel.json`), live at [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) targeting the **Midnight Preview Testnet**.
+
 
 ---
 

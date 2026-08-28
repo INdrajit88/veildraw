@@ -25,6 +25,7 @@ fs.writeFileSync(ADDR_FILE, '');
 const child = spawn('npm', ['run', 'preprod-remote'], {
   cwd: '/Users/indrajitari/Projects/midnight/pgpapp/pgp-cli',
   env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=8192' },
+
 });
 const out = fs.createWriteStream(LOG, { flags: 'a' });
 child.stdout.pipe(out, { end: false });
@@ -82,7 +83,8 @@ const timer = setInterval(() => {
     send(WALLET_SEED);
   } else if (stage === 2 && log.includes('Your NIGHT wallet balance is:')) {
     stage = 3;
-    console.log('Funds detected; waiting for dust generation and main menu...');
+    console.log('Funds detected; running dust generation (this takes several minutes on Preprod)...');
+
   } else if (stage === 3 && log.includes('Private Giveaway Platform (PGP) - Main Menu')) {
     stage = 4;
     send('1'); // deploy a new contract
