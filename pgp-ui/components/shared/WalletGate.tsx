@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Lock } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Lock, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { WalletState } from '@/lib/types';
 
@@ -15,28 +15,39 @@ interface WalletGateProps {
 }
 
 export function WalletGate({ wallet, onOpenWalletModal, title, description, children }: WalletGateProps) {
+  const reduceMotion = useReducedMotion();
+
   if (!wallet.isConnected) {
     return (
-      <section className="bg-parchment">
+      <div className="ambient flex min-h-[80vh] items-center justify-center px-6 py-20">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto flex max-w-content flex-col items-center px-6 py-20 text-center"
+          className="veil-card mx-auto flex max-w-md flex-col items-center gap-6 rounded-xl p-10 text-center"
         >
-          <div className="flex size-11 items-center justify-center rounded-full bg-chip/65">
-            <Lock className="h-5 w-5 text-ink" />
+          <div className="flex size-12 items-center justify-center rounded-full border border-primary/25 bg-primary-soft text-primary-bright">
+            <Lock className="h-5 w-5" aria-hidden />
           </div>
-          <h1 className="t-display-lg mt-8 text-ink">{title}</h1>
-          <p className="t-lead mt-4 max-w-xl text-ink-muted-80">{description}</p>
-          <Button variant="hero" className="mt-8" onClick={onOpenWalletModal}>
-            Connect Wallet
+
+          <div className="space-y-2.5">
+            <div className="eyebrow justify-center">
+              <ShieldCheck className="size-3.5" aria-hidden />
+              <span>Wallet required</span>
+            </div>
+            <h1 className="t-display-md text-white">{title}</h1>
+            <p className="t-body mx-auto max-w-sm leading-relaxed">{description}</p>
+          </div>
+
+          <Button variant="default" size="lg" className="w-full" onClick={onOpenWalletModal}>
+            Connect Midnight Wallet
           </Button>
-          <p className="t-fine-print mt-6 text-ink-muted-48">
-            Wallet required for giveaway participation and ZK proof generation.
+
+          <p className="font-mono text-[11px] leading-relaxed text-ink-muted-48">
+            Your wallet signs and holds ZK witnesses locally — secrets never leave your device.
           </p>
         </motion.div>
-      </section>
+      </div>
     );
   }
 

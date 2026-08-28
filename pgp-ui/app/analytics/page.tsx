@@ -1,9 +1,12 @@
-'use client';
+import type { Metadata } from 'next';
+import { AnalyticsRoute } from '@/components/routes/AnalyticsRoute';
 
-import { useStore } from '@/components/layout/ClientProviders';
-import { AnalyticsView } from '@/components/views/AnalyticsView';
+export const metadata: Metadata = {
+  title: 'Analytics',
+  description:
+    'Live cryptographic telemetry for the VeilDraw contract — entry accumulator, winning commitment, and organizer key, streamed from the Midnight indexer.',
+};
 
 export default function AnalyticsPage() {
-  const store = useStore();
-  return <AnalyticsView giveaway={store.giveaway} indexerConnected={store.indexerConnected} />;
+  return <AnalyticsRoute />;
 }

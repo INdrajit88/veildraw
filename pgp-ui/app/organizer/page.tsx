@@ -1,27 +1,12 @@
-'use client';
+import type { Metadata } from 'next';
+import { OrganizerRoute } from '@/components/routes/OrganizerRoute';
 
-import { useStore } from '@/components/layout/ClientProviders';
-import { WalletGate } from '@/components/shared/WalletGate';
-import { OrganizerConsole } from '@/components/views/OrganizerConsole';
+export const metadata: Metadata = {
+  title: 'Organizer Console',
+  description:
+    'Create VeilDraw giveaways, post the winning commitment, and manage the draw lifecycle — all guarded by organizer-bound ZK circuits on Midnight.',
+};
 
 export default function OrganizerPage() {
-  const store = useStore();
-  return (
-    <WalletGate
-      wallet={store.wallet}
-      onOpenWalletModal={() => store.setIsWalletModalOpen(true)}
-      title="Organizer Access Required"
-      description="Connect your wallet to deploy giveaways and manage draws with organizer-bound circuits."
-    >
-      <OrganizerConsole
-        giveaway={store.giveaway}
-        createGiveawayAction={store.createGiveawayAction}
-        closeAndSelectWinnerAction={store.closeAndSelectWinnerAction}
-        cancelGiveawayAction={store.cancelGiveawayAction}
-        contractAddress={store.contractAddress}
-        indexerConnected={store.indexerConnected}
-        setGiveaway={store.setGiveaway}
-      />
-    </WalletGate>
-  );
+  return <OrganizerRoute />;
 }

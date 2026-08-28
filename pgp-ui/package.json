@@ -9,12 +9,15 @@
     "dev": "next dev",
     "build": "next build && (cp -r ../contract/src/managed/pgp/keys ./out/keys 2>/dev/null || true) && (cp -r ../contract/src/managed/pgp/zkir ./out/zkir 2>/dev/null || true)",
     "build:preview": "NEXT_PUBLIC_NETWORK_ID=preview next build && (cp -r ../contract/src/managed/pgp/keys ./out/keys 2>/dev/null || true) && (cp -r ../contract/src/managed/pgp/zkir ./out/zkir 2>/dev/null || true)",
+    "build:preprod": "NEXT_PUBLIC_NETWORK_ID=preprod next build && (cp -r ../contract/src/managed/pgp/keys ./out/keys 2>/dev/null || true) && (cp -r ../contract/src/managed/pgp/zkir ./out/zkir 2>/dev/null || true)",
     "start": "next start",
     "start:static": "http-server --port 0 ./out",
     "build:start": "npm run build && npm run start:static",
     "build:start:preview": "npm run build:preview && npm run start:static",
+    "build:start:preprod": "npm run build:preprod && npm run start:static",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
+
   },
   "dependencies": {
     "@midnight-ntwrk/compact-runtime": "0.16.0",
@@ -29,6 +32,9 @@
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.8",
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
+    "@types/three": "^0.185.4",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -41,7 +47,8 @@
     "react-dom": "^19.2.4",
     "rxjs": "^7.8.2",
     "sonner": "^1.7.4",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
@@ -52,6 +59,7 @@
     "eslint-config-next": "^15.3.4",
     "postcss": "^8.5.4",
     "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3"
   }
 }

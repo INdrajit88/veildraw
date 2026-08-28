@@ -9,12 +9,15 @@
 [![Node](https://img.shields.io/badge/node-%3E%3D24.11.1-brightgreen?style=flat-square)](https://nodejs.org)
 [![Midnight Preview](https://img.shields.io/badge/Midnight-Preview_Testnet-8B5CF6?style=flat-square)](https://docs.midnight.network)
 [![Rise In](https://img.shields.io/badge/Rise_In-New_Moon_to_Full_·_Level_3-0ea5e9?style=flat-square)](https://www.risein.com/programs/new-moon-to-full-monthly-moonshots-on-midnight)
+[![X (Twitter)](https://img.shields.io/badge/X-@VeilDraww-black?style=flat-square&logo=x)](https://x.com/VeilDraww)
 
 ### 🌐 Live Demo & Quick Links
 
 | Resource | Link | Description |
 |:---|:---|:---|
-| **Live dApp (Production)** | [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) | Next.js 15 ZK giveaway dApp on Midnight Preview |
+| **Live dApp — Production** | [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) | Next.js 15 ZK giveaway dApp — Midnight **Preview** Testnet |
+| **Live dApp — Preprod** | [veildraw-pgp-ui-git-preprod.vercel.app](https://veildraw-pgp-ui-git-preprod-indrajit88s-projects.vercel.app/) | Same dApp — Midnight **Preprod** Testnet |
+| **Official X (Twitter)** | [@VeilDraww](https://x.com/VeilDraww) | Official project updates & announcements |
 | **Giveaway Portal** | [veildraw-pgp-ui.vercel.app/giveaways](https://veildraw-pgp-ui.vercel.app/giveaways) | Browse & enter active zero-knowledge giveaways |
 | **Organizer Console** | [veildraw-pgp-ui.vercel.app/organizer](https://veildraw-pgp-ui.vercel.app/organizer) | Create giveaways & draw winners via ZK witness |
 | **Winner Verification** | [veildraw-pgp-ui.vercel.app/verify](https://veildraw-pgp-ui.vercel.app/verify) | Verify ticket secrets & claim prizes on-chain |
@@ -24,6 +27,7 @@
 
 
 </div>
+
 
 ---
 
@@ -41,8 +45,8 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 
 | Network | Contract Address | Status | Live dApp / Explorer |
 |:---|:---|:---|:---|
-| **Midnight Preview** | [`0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba`](https://veildraw-pgp-ui.vercel.app/giveaways) | **Active** — Rewritten contract, live on Preview | [Open in VeilDraw Preview dApp](https://veildraw-pgp-ui.vercel.app/giveaways) |
-| Midnight Preprod | — | Standby | Wallet OOMs syncing the Preprod ledger on laptop RAM; Preview used |
+| **Midnight Preview** | [`0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba`](https://veildraw-pgp-ui.vercel.app/giveaways) | **Active** — Live on Preview Testnet | [Open in VeilDraw Preview dApp](https://veildraw-pgp-ui.vercel.app/giveaways) |
+| **Midnight Preprod** | [`0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba`](https://veildraw-pgp-ui-git-preprod-indrajit88s-projects.vercel.app/giveaways) | **Deployed** — Preprod environment live on Vercel | [Open in VeilDraw Preprod dApp](https://veildraw-pgp-ui-git-preprod-indrajit88s-projects.vercel.app/) |
 
 ### On-Chain Deployment Details (Preview Testnet)
 
@@ -232,9 +236,12 @@ npm test --workspace=@midnight-ntwrk/pgp-contract -- --run
 
 ### CI/CD
 
-**CI** runs on every push to `main`/`dev` and every PR: checkout → Node 24 → install → contract typecheck → contract lint → unit tests → build contract, API, CLI, and UI workspaces.
+**CI** runs on every push to `main`/`dev`/`preprod` and every PR: checkout → Node 24 → install → contract typecheck → contract lint → unit tests → build contract, API, CLI, and UI workspaces. The UI build step uses `NEXT_PUBLIC_NETWORK_ID=preview` on `main` and `NEXT_PUBLIC_NETWORK_ID=preprod` on the `preprod` branch.
 
-**CD** deploys the UI to Vercel on every push to `main` (`vercel.json`), live at [pgpapp.vercel.app](https://pgpapp.vercel.app).
+| Branch | Environment | Vercel URL | Network |
+|:---|:---|:---|:---|
+| `main` | Production | [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) | Midnight Preview Testnet |
+| `preprod` | Preprod | [veildraw-pgp-ui-git-preprod.vercel.app](https://veildraw-pgp-ui-git-preprod-indrajit88s-projects.vercel.app/) | Midnight Preprod Testnet |
 
 ---
 
@@ -290,17 +297,20 @@ npm run preview-remote           # interactive: deploy / join / enter / close / 
 | `npm run build` | Build contract + API + UI workspaces |
 | `npm run dev` | Next.js dev server |
 | `npm run preview` | Static Preview build + local server |
-| `cd pgp-ui && npm run build:preview` | Production static export targeting Preview |
+| `cd pgp-ui && npm run build:preview` | Production static export targeting **Preview** Testnet |
+| `cd pgp-ui && npm run build:preprod` | Production static export targeting **Preprod** Testnet |
 | `cd pgp-cli && npm run preview-remote` | CLI: deploy / interact with Preview contract |
 
 ---
 
 ## Repository & Links
 
+- **X (Twitter):** [@VeilDraww](https://x.com/VeilDraww)
 - **GitHub:** [github.com/INdrajit88/veildraw](https://github.com/INdrajit88/veildraw)
-- **Live Demo:** [pgpapp.vercel.app](https://pgpapp.vercel.app)
+- **Live Demo:** [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/)
 - **Demo Video:** [youtu.be/meczmnhMPWo](https://youtu.be/meczmnhMPWo)
 - **Program:** [Rise In — New Moon to Full](https://www.risein.com/programs/new-moon-to-full-monthly-moonshots-on-midnight)
 - **Support:** [SUPPORT.md](SUPPORT.md) • **Proposal:** [PROPOSAL.md](PROPOSAL.md)
 
 **License:** MIT
+

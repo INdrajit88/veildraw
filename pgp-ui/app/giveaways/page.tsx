@@ -1,25 +1,12 @@
-'use client';
+import type { Metadata } from 'next';
+import { GiveawaysRoute } from '@/components/routes/GiveawaysRoute';
 
-import { useStore } from '@/components/layout/ClientProviders';
-import { WalletGate } from '@/components/shared/WalletGate';
-import { GiveawayPortal } from '@/components/views/GiveawayPortal';
+export const metadata: Metadata = {
+  title: 'Giveaways',
+  description:
+    'Enter a private VeilDraw giveaway on Midnight. Derive a ZK commitment locally and publish only the opaque hash — no address, no entry list.',
+};
 
 export default function GiveawaysPage() {
-  const store = useStore();
-  return (
-    <WalletGate
-      wallet={store.wallet}
-      onOpenWalletModal={() => store.setIsWalletModalOpen(true)}
-      title="Participant Access Required"
-      description="Connect your wallet to enter giveaways and submit your private entry commitment."
-    >
-      <GiveawayPortal
-        giveaway={store.giveaway}
-        enterGiveawayAction={store.enterGiveawayAction}
-        contractAddress={store.contractAddress}
-        indexerConnected={store.indexerConnected}
-        setGiveaway={store.setGiveaway}
-      />
-    </WalletGate>
-  );
+  return <GiveawaysRoute />;
 }

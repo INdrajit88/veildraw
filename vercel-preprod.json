@@ -1,0 +1,4 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "NEXT_PUBLIC_NETWORK_ID=preprod npm run build --workspace=@midnight-ntwrk/pgp-ui"
+}

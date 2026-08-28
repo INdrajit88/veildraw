@@ -2,15 +2,14 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-// Quiet inline callouts — parchment strips, never loud cards
-const alertVariants = cva('w-full rounded-sm px-4 py-3 t-caption [&>svg]:mr-2 [&>svg]:size-4', {
+const alertVariants = cva('w-full rounded-md border p-4 text-sm flex items-start gap-3', {
   variants: {
     variant: {
-      default: 'bg-parchment text-ink-muted-80 [&>svg]:text-ink-muted-48',
-      info: 'bg-primary/10 text-primary [&>svg]:text-primary',
-      success: 'bg-primary/10 text-primary [&>svg]:text-primary',
-      warning: 'bg-parchment text-ink-muted-80 [&>svg]:text-ink-muted-48',
-      error: 'bg-[#ff375f]/10 text-[#d70015] [&>svg]:text-[#d70015]',
+      default: 'border-white/10 bg-white/[0.04] text-ink-muted-80 [&>svg]:text-ink-muted-48',
+      info: 'border-primary/25 bg-primary-soft text-primary-bright [&>svg]:text-primary-bright',
+      success: 'border-emerald/25 bg-emerald-soft text-emerald [&>svg]:text-emerald',
+      warning: 'border-amber/25 bg-amber-soft text-amber [&>svg]:text-amber',
+      error: 'border-rose/25 bg-rose-soft text-rose [&>svg]:text-rose',
     },
   },
   defaultVariants: {
