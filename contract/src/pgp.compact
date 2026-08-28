@@ -1,5 +1,24 @@
-// Private Giveaway Platform (PGP) Smart Contract
-// Built for Midnight Network
+// VeilDraw — Private Giveaway Platform (PGP) Smart Contract
+// Built for the Midnight network.
+//
+// One contract instance hosts one giveaway with the lifecycle:
+//
+//   REGISTRATION_OPEN ──> DRAW_PENDING ──> COMPLETED
+//          │                    │
+//          └───────> CANCELLED <┘   (organizer only, never after completion)
+//
+// Privacy model:
+//   * Participants enter by publishing only an opaque 32-byte commitment.
+//     Commitments are chained into `entryAccumulator` with a domain-separated
+//     persistent hash, so the ledger never learns who entered or how entries
+//     map to wallets.
+//   * The organizer draws off-chain and publishes only the winning
+//     commitment hash (`closeAndSelectWinner`).
+//   * The winner claims by proving knowledge of a ticket secret whose
+//     domain-separated hash equals the winning commitment (`claimPrize`).
+//     Secret keys stay in private witnesses and never reach the ledger.
+//   * Organizer-only actions are guarded by `organizerPk`, which is bound to
+//     the organizer's private `localSecretKey` witness via `publicKey`.
 
 pragma language_version 0.23;
 
@@ -36,20 +55,27 @@ constructor() {
   entryAccumulator = pad(32, "pgp:init");
   winningCommitment = pad(32, "");
   winnerClaimed = false;
-  entryCount.increment(1);
 }
 
+// Organizer/participant secret key, held locally in private state.
 witness localSecretKey(): Bytes<32>;
 
+// Per-participant nonce, held locally in private state.
 witness participantNonce(): Bytes<32>;
 
+// Organizer initializes the giveaway. Binds `organizerPk` to the caller's
+// secret key so that only the organizer can later draw or cancel.
 export circuit createGiveaway(newTitle: Opaque<"string">, newPrize: Opaque<"string">): [] {
   assert(giveawayState == State.REGISTRATION_OPEN, "Giveaway is already initialized or closed");
+  assert(title == none<Opaque<"string">>(), "Giveaway details are already set");
   organizerPk = disclose(publicKey(localSecretKey()));
   title = disclose(some<Opaque<"string">>(newTitle));
   prizeDetails = disclose(some<Opaque<"string">>(newPrize));
 }
 
+// Participant registers an entry commitment. The commitment is chained into
+// the accumulator together with the current entry index so that every entry
+// occupies a unique, order-bound position.
 export circuit enterGiveaway(entryCommitment: Bytes<32>): [] {
   assert(giveawayState == State.REGISTRATION_OPEN, "Giveaway registration is closed");
   const currentCount = entryCount as Field as Bytes<32>;
@@ -58,6 +84,7 @@ export circuit enterGiveaway(entryCommitment: Bytes<32>): [] {
   entryCount.increment(1);
 }
 
+// Organizer closes registration and publishes the drawn winning commitment.
 export circuit closeAndSelectWinner(winnerCommitment: Bytes<32>): [] {
   assert(giveawayState == State.REGISTRATION_OPEN, "Giveaway registration must be open to draw winner");
   assert(organizerPk == publicKey(localSecretKey()), "Only the giveaway organizer can close and select winner");
@@ -65,6 +92,8 @@ export circuit closeAndSelectWinner(winnerCommitment: Bytes<32>): [] {
   giveawayState = State.DRAW_PENDING;
 }
 
+// Winner proves knowledge of the ticket secret matching the winning
+// commitment and claims the prize exactly once.
 export circuit claimPrize(ticketSecret: Bytes<32>): [] {
   assert(giveawayState == State.DRAW_PENDING, "Giveaway is not in draw pending state");
   assert(winnerClaimed == false, "Prize has already been claimed");
@@ -74,12 +103,14 @@ export circuit claimPrize(ticketSecret: Bytes<32>): [] {
   giveawayState = State.COMPLETED;
 }
 
+// Organizer cancels the giveaway at any point before the prize is claimed.
 export circuit cancelGiveaway(): [] {
   assert(organizerPk == publicKey(localSecretKey()), "Only the giveaway organizer can cancel the giveaway");
   assert(giveawayState != State.COMPLETED, "Cannot cancel a completed giveaway");
   giveawayState = State.CANCELLED;
 }
 
+// Deterministic one-way derivation of a public identifier from a secret key.
 export circuit publicKey(sk: Bytes<32>): Bytes<32> {
   return persistentHash<Vector<2, Bytes<32>>>([pad(32, "pgp:pk:"), sk]);
 }

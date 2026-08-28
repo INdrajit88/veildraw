@@ -41,18 +41,19 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 
 | Network | Contract Address | Status | Live dApp / Explorer |
 |:---|:---|:---|:---|
-| **Midnight Preview** | [`445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1`](https://veildraw-pgp-ui.vercel.app/giveaways) | **Active** — Live on Preview | [Open in VeilDraw Preview dApp](https://veildraw-pgp-ui.vercel.app/giveaways) |
-| Midnight Preprod | — | Standby | Dust-ledger sync exceeds laptop RAM; Preview used |
+| **Midnight Preview** | [`0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba`](https://veildraw-pgp-ui.vercel.app/giveaways) | **Active** — Rewritten contract, live on Preview | [Open in VeilDraw Preview dApp](https://veildraw-pgp-ui.vercel.app/giveaways) |
+| Midnight Preprod | — | Standby | Wallet OOMs syncing the Preprod ledger on laptop RAM; Preview used |
 
 ### On-Chain Deployment Details (Preview Testnet)
 
 | Deployment Fact | Value | Verification Link |
 |:---|:---|:---|
-| **Active Giveaway** | `PGP Launch Giveaway` (5,000 tNIGHT prize) | [View in Live Portal](https://veildraw-pgp-ui.vercel.app/giveaways) |
-| **Contract Address** | `445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1` | [Open in Preview App](https://veildraw-pgp-ui.vercel.app/giveaways) |
-| **Deploy Transaction** | `04bc1dfc7570ba3835dbf8ac940ecc52e2997fa535c39ea6faf463a3b1466443` | [Query via Indexer GraphQL](https://indexer.preview.midnight.network/api/v4/graphql) |
-| **Verified Block** | Block `511,326` (Preview indexer `contractAction`) | [Preview Indexer API](https://indexer.preview.midnight.network/api/v4/graphql) |
-| **Organizer Wallet** | `mn_addr_preview1d92nezft59hhefh23eaepu627w90537hce8p0g629vescrymuxrq8wc8fq` | [Preview Faucet Portal](https://faucet.preview.midnight.network/) |
+| **Active Giveaway** | `VeilDraw Preview Giveaway` (5,000 tNIGHT prize) | [View in Live Portal](https://veildraw-pgp-ui.vercel.app/giveaways) |
+| **Contract Address** | `0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba` | [Open in Preview App](https://veildraw-pgp-ui.vercel.app/giveaways) |
+| **Deploy Transaction** | `4dea31dca9a52a5c58e52504c86e8725f742169479810d40d43e7d4a35b5ea9d` | [Query via Indexer GraphQL](https://indexer.preview.midnight.network/api/v4/graphql) |
+| **Verified Block** | Block `606,152` (Preview indexer `contractAction`) | [Preview Indexer API](https://indexer.preview.midnight.network/api/v4/graphql) |
+| **Create-Giveaway Tx** | `a4fe5727b4277677a167c64b494a1d7577a84551cd0fbf3eb5e6dc4167c58101` (Block `606,157`) | [Query via Indexer GraphQL](https://indexer.preview.midnight.network/api/v4/graphql) |
+| **Organizer Wallet** | `mn_addr_preview1lps20dj6gj6fdpnvlz7vj7tlqgdevrnewukkl656d5wl07ft95ksg42xe3` | [Preview Faucet Portal](https://faucet.preview.midnight.network/) |
 
 ### Network Infrastructure & Verification Endpoints
 
