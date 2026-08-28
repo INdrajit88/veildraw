@@ -1,10 +1,15 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Cpu, Layers, ShieldCheck, Activity, ExternalLink, DatabaseZap } from 'lucide-react';
+import { PageHeader } from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { stateLabel } from '@/lib/giveaway';
 import type { GiveawayItem } from '@/lib/types';
-import { networkCapitalized } from '@/lib/network';
+import { networkCapitalized, indexerUrl } from '@/lib/network';
+import { slideInRight } from '@/lib/motion';
 
 interface AnalyticsViewProps {
   giveaway: GiveawayItem;
@@ -12,83 +17,177 @@ interface AnalyticsViewProps {
 }
 
 export function AnalyticsView({ giveaway, indexerConnected }: AnalyticsViewProps) {
+  const reduceMotion = useReducedMotion();
+
   const metrics = [
     {
-      label: 'Giveaway State',
-      value: indexerConnected ? giveaway.state.replace(/_/g, ' ') : '—',
-      small: true,
+      label: 'Giveaway state',
+      value: indexerConnected ? stateLabel(giveaway.state) : 'Standby',
+      accent: indexerConnected ? 'text-white' : 'text-ink-muted-48',
+      icon: Activity,
     },
-    { label: 'Entry Commitments', value: indexerConnected ? String(giveaway.entryCount) : '—' },
-    { label: 'Winner Claimed', value: indexerConnected ? (giveaway.winnerClaimed ? 'Yes' : 'No') : '—' },
-    { label: 'ZK Circuits', value: '5' },
+    {
+      label: 'Registered commitments',
+      value: indexerConnected ? String(giveaway.entryCount) : '—',
+      accent: 'text-white',
+      icon: Layers,
+    },
+    {
+      label: 'Claim status',
+      value: indexerConnected ? (giveaway.winnerClaimed ? 'Claimed' : 'Unclaimed') : '—',
+      accent: indexerConnected && giveaway.winnerClaimed ? 'text-emerald' : 'text-white',
+      icon: ShieldCheck,
+    },
+    {
+      label: 'ZK circuits in contract',
+      value: '5',
+      accent: 'text-violet',
+      icon: Cpu,
+      note: 'create · enter · close · claim · cancel',
+    },
   ];
 
   return (
-    <div>
-      {/* light tile — metrics */}
-      <section className="bg-canvas">
-        <div className="mx-auto max-w-grid px-6 py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h1 className="t-display-lg text-ink">Protocol analytics</h1>
-            <p className="t-body mt-3 max-w-2xl text-ink-muted-80">
-              {indexerConnected
-                ? `Live state read from the on-chain VeilDraw contract on ${networkCapitalized}.`
-                : 'Connect a deployed contract in Settings to view live on-chain state.'}
-            </p>
-          </motion.div>
+    <div className="min-h-[85vh] px-6 py-16">
+      <div className="mx-auto max-w-grid space-y-10">
+        <PageHeader
+          icon={Cpu}
+          eyebrow="Telemetry"
+          title="Protocol analytics"
+          description={
+            indexerConnected
+              ? `Cryptographic state streamed live from the Midnight indexer on ${networkCapitalized}.`
+              : 'Connect a deployed contract address in Settings to view live accumulator telemetry.'
+          }
+          aside={
+            <a
+              href={indexerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-pill border border-white/10 bg-white/[0.03] px-4 py-2 t-button-utility text-ink-muted-80 transition-colors hover:border-white/20 hover:text-white"
+            >
+              <span>Open indexer</span>
+              <ExternalLink className="size-3.5" aria-hidden />
+            </a>
+          }
+        />
 
-          <div className="mt-12 grid grid-cols-2 gap-5 lg:grid-cols-4">
-            {metrics.map((m, i) => (
+        {/* Metrics */}
+        <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
+          {metrics.map((m, i) => {
+            const Icon = m.icon;
+            return (
               <motion.div
                 key={m.label}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.05 * i, ease: [0.16, 1, 0.3, 1] }}
+                variants={reduceMotion ? undefined : slideInRight}
+                initial={reduceMotion ? false : 'initial'}
+                animate="animate"
+                transition={{ duration: 0.35, delay: reduceMotion ? 0 : 0.05 * i }}
               >
-                <Card>
-                  <CardContent className="p-6">
-                    <p className="t-caption-strong text-ink-muted-48">{m.label}</p>
-                    <p className={`${m.small ? 't-tagline' : 't-display-lg'} mt-3 text-ink`}>{m.value}</p>
-                  </CardContent>
+                <Card className="veil-card veil-card-hover h-full p-6">
+                  <div className="flex items-center justify-between">
+                    <p className="font-mono text-[11px] uppercase tracking-wider text-ink-muted-48">{m.label}</p>
+                    <span className="flex size-7 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.03] text-ink-muted-80">
+                      <Icon className="size-3.5" aria-hidden />
+                    </span>
+                  </div>
+                  <p className={`tnum mt-3 truncate font-mono text-xl font-semibold md:text-2xl ${m.accent}`}>
+                    {m.value}
+                  </p>
+                  {m.note && <p className="mt-1 truncate font-mono text-[10px] text-ink-muted-48">{m.note}</p>}
                 </Card>
               </motion.div>
-            ))}
-          </div>
+            );
+          })}
         </div>
-      </section>
 
-      {/* dark tile — raw accumulator */}
-      <section className="bg-tile-3">
-        <div className="mx-auto max-w-content px-6 py-20">
-          <h2 className="t-display-lg text-white">On-chain commitment accumulator</h2>
-          <p className="t-lead mt-4 text-body-muted">Raw cryptographic state from the ledger.</p>
+        {/* Ledger readout */}
+        <Card className="p-0">
+          <CardContent className="p-6 space-y-5 md:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
+              <div>
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-primary-bright">
+                  Cryptographic ledger readout
+                </span>
+                <h2 className="t-tagline mt-1 text-white">On-chain commitment accumulator</h2>
+              </div>
+              <Badge variant={indexerConnected ? 'open' : 'default'}>
+                {indexerConnected ? 'Live stream' : 'Standby'}
+              </Badge>
+            </div>
 
-          <div className="data-block mt-10 space-y-6 bg-transparent p-0 font-mono">
-            <div>
-              <p className="t-caption text-ink-muted-48">{'// entryAccumulator (current)'}</p>
-              <p className="mt-1 break-all text-[15px] text-primary-on-dark">
-                {indexerConnected ? giveaway.entryAccumulator || '(empty)' : '(not connected)'}
-              </p>
+            <div className="space-y-4">
+              <div className="data-block space-y-1.5 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-ink-muted-48">{'// entryAccumulator — current tree root'}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-ink-muted-48/60">
+                    Order-bound persistentHash
+                  </span>
+                </div>
+                <p
+                  className={
+                    giveaway.entryAccumulator
+                      ? 'break-all text-sm font-medium text-primary-bright'
+                      : 'text-xs text-ink-muted-48'
+                  }
+                >
+                  {indexerConnected ? giveaway.entryAccumulator || '(initial tree root)' : '(indexer standby)'}
+                </p>
+              </div>
+
+              <div className="data-block space-y-1.5 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-ink-muted-48">{'// winningCommitment — disclosed by organizer'}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-ink-muted-48/60">
+                    32-byte secret digest
+                  </span>
+                </div>
+                <p
+                  className={
+                    giveaway.winningCommitment
+                      ? 'break-all text-sm font-medium text-violet'
+                      : 'text-xs text-ink-muted-48'
+                  }
+                >
+                  {indexerConnected ? giveaway.winningCommitment || '(not yet posted)' : '(indexer standby)'}
+                </p>
+              </div>
+
+              <div className="data-block space-y-1.5 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-ink-muted-48">{'// organizerPk — witness-bound public key'}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-ink-muted-48/60">
+                    publicKey(localSecretKey)
+                  </span>
+                </div>
+                <p
+                  className={
+                    giveaway.organizerPk ? 'break-all text-sm font-medium text-emerald' : 'text-xs text-ink-muted-48'
+                  }
+                >
+                  {indexerConnected ? giveaway.organizerPk || '(unbound)' : '(indexer standby)'}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="t-caption text-ink-muted-48">{'// winningCommitment'}</p>
-              <p className="mt-1 break-all text-[15px] text-primary-on-dark">
-                {indexerConnected ? giveaway.winningCommitment || '(not set)' : '(not connected)'}
+
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-white/[0.05] bg-white/[0.02] p-3.5">
+              <p className="flex items-center gap-2 font-mono text-[11px] text-ink-muted-48">
+                <DatabaseZap className="size-3.5 text-primary" aria-hidden />
+                Raw contract state is queryable by anyone — no private material is exposed.
               </p>
+              <a
+                href={indexerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-mono text-[11px] text-ink-muted-80 underline-offset-4 hover:text-white hover:underline"
+              >
+                Query {networkCapitalized} indexer GraphQL
+                <ExternalLink className="size-3" aria-hidden />
+              </a>
             </div>
-            <div>
-              <p className="t-caption text-ink-muted-48">{'// organizerPk'}</p>
-              <p className="mt-1 break-all text-[15px] text-primary-on-dark">
-                {indexerConnected ? giveaway.organizerPk || '(not set)' : '(not connected)'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

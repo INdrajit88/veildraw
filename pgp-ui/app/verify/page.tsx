@@ -1,25 +1,12 @@
-'use client';
+import type { Metadata } from 'next';
+import { VerifyRoute } from '@/components/routes/VerifyRoute';
 
-import { useStore } from '@/components/layout/ClientProviders';
-import { WalletGate } from '@/components/shared/WalletGate';
-import { WinnerVerification } from '@/components/views/WinnerVerification';
+export const metadata: Metadata = {
+  title: 'Verify & Claim',
+  description:
+    'Check the disclosed winning commitment and claim your VeilDraw prize by proving your ticket in zero knowledge — identity never disclosed.',
+};
 
 export default function VerifyPage() {
-  const store = useStore();
-  return (
-    <WalletGate
-      wallet={store.wallet}
-      onOpenWalletModal={() => store.setIsWalletModalOpen(true)}
-      title="Winner Access Required"
-      description="Connect your wallet to verify the winning commitment and claim your prize privately."
-    >
-      <WinnerVerification
-        giveaway={store.giveaway}
-        claimPrizeAction={store.claimPrizeAction}
-        contractAddress={store.contractAddress}
-        indexerConnected={store.indexerConnected}
-        setGiveaway={store.setGiveaway}
-      />
-    </WalletGate>
-  );
+  return <VerifyRoute />;
 }

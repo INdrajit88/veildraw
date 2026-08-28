@@ -2,7 +2,7 @@ name: Midnight PGP DApp CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, master, dev ]
+    branches: [ main, master, dev, preprod ]
   pull_request:
     branches: [ main, master ]
 
@@ -44,5 +44,14 @@ jobs:
       - name: Build CLI Package
         run: npm run build --workspace=@midnight-ntwrk/pgp-cli
 
-      - name: Build Web UI Package
+      - name: Build Web UI Package (Preview)
+        if: github.ref != 'refs/heads/preprod'
         run: npm run build --workspace=@midnight-ntwrk/pgp-ui
+        env:
+          NEXT_PUBLIC_NETWORK_ID: preview
+
+      - name: Build Web UI Package (Preprod)
+        if: github.ref == 'refs/heads/preprod'
+        run: npm run build:preprod --workspace=@midnight-ntwrk/pgp-ui
+        env:
+          NEXT_PUBLIC_NETWORK_ID: preprod

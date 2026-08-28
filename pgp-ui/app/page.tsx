@@ -1,15 +1,12 @@
-'use client';
+import type { Metadata } from 'next';
+import { HomeRoute } from '@/components/routes/HomeRoute';
 
-import { useStore } from '@/components/layout/ClientProviders';
-import { HomePage } from '@/components/views/HomePage';
+export const metadata: Metadata = {
+  title: 'VeilDraw — Private Giveaways, Zero-Knowledge Proven',
+  description:
+    'VeilDraw runs zero-knowledge giveaways on Midnight. Enter with an opaque commitment, prove eligibility in zero knowledge, and claim prizes without revealing your identity.',
+};
 
 export default function Home() {
-  const store = useStore();
-  return (
-    <HomePage
-      giveaway={store.giveaway}
-      wallet={store.wallet}
-      onOpenWalletModal={() => store.setIsWalletModalOpen(true)}
-    />
-  );
+  return <HomeRoute />;
 }

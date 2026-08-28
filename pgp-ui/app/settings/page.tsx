@@ -1,15 +1,12 @@
-'use client';
+import type { Metadata } from 'next';
+import { SettingsRoute } from '@/components/routes/SettingsRoute';
 
-import { useStore } from '@/components/layout/ClientProviders';
-import { SettingsView } from '@/components/views/SettingsView';
+export const metadata: Metadata = {
+  title: 'Settings',
+  description:
+    'Configure the active VeilDraw contract address, inspect Midnight network endpoints, and review your wallet session.',
+};
 
 export default function SettingsPage() {
-  const store = useStore();
-  return (
-    <SettingsView
-      contractAddress={store.contractAddress}
-      setContractAddress={store.setContractAddress}
-      wallet={store.wallet}
-    />
-  );
+  return <SettingsRoute />;
 }

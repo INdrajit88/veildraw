@@ -1,11 +1,12 @@
-'use client';
+import type { Metadata } from 'next';
+import { DashboardRoute } from '@/components/routes/DashboardRoute';
 
-import { useStore } from '@/components/layout/ClientProviders';
-import { Dashboard } from '@/components/views/Dashboard';
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  description:
+    'Real-time control center for the active VeilDraw contract — live giveaway state, private entry count, and session activity on Midnight.',
+};
 
 export default function DashboardPage() {
-  const store = useStore();
-  return (
-    <Dashboard giveaway={store.giveaway} activities={store.activities} indexerConnected={store.indexerConnected} />
-  );
+  return <DashboardRoute />;
 }
