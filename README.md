@@ -214,7 +214,6 @@ veildraw/
 │   ├── components/      #   views, layout, modals (Wallet, Transaction), 3D scene, motion
 │   ├── lib/             #   store, network config, scene bridge, types, utils
 │   └── utils/           #   midnightWallet (connector), midnightService (indexer)
-├── scripts/             # docs helpers (demo-table generator)
 ├── .github/workflows/   # ci.yml — CI/CD pipeline
 ├── docs/screenshots/    # desktop + mobile captures
 ├── vercel.json          # CD: auto-deploy to Vercel on main
