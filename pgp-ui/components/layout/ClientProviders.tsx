@@ -14,11 +14,11 @@ import { pageTransition, ease } from '@/lib/motion';
 // Store context — shared across all pages via useStore()
 export type StoreValue = ReturnType<typeof usePGPStore>;
 const DEFAULT_STORE: StoreValue = {
-  contractAddress: '445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1',
+  contractAddress: '0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba',
   setContractAddress: () => {},
   giveaway: {
     id: 'pgp-giveaway-1',
-    contractAddress: '445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1',
+    contractAddress: '0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba',
     title: 'VeilDraw Preview Giveaway',
     prizeDetails: '5,000 tNIGHT + Private Pass',
     organizerPk: '',

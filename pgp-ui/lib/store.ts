@@ -19,7 +19,7 @@ import {
 
 const INITIAL_GIVEAWAY: GiveawayItem = {
   id: 'pgp-giveaway-1',
-  contractAddress: '445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1',
+  contractAddress: '0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba',
   title: 'No contract connected',
   prizeDetails: 'Enter a deployed VeilDraw contract address to view on-chain state',
   organizerPk: '',
@@ -33,7 +33,7 @@ const INITIAL_GIVEAWAY: GiveawayItem = {
 
 export function usePGPStore() {
   const [contractAddress, setContractAddress] = useState<string>(
-    '445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1',
+    '0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba',
   );
   const [giveaway, setGiveaway] = useState<GiveawayItem>(INITIAL_GIVEAWAY);
   const [activities, setActivities] = useState<ActivityItem[]>([]);
