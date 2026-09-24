@@ -26,14 +26,7 @@ const config: Config = {
           'var(--font-inter)',
           'sans-serif',
         ],
-        sans: [
-          '"SF Pro Text"',
-          'system-ui',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'var(--font-inter)',
-          'sans-serif',
-        ],
+        sans: ['"SF Pro Text"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'var(--font-inter)', 'sans-serif'],
         mono: [
           '"JetBrains Mono"',
           'var(--font-mono)',
@@ -82,6 +75,9 @@ const config: Config = {
           muted: '#9aa3b2',
         },
         canvas: '#0a0b0f',
+        // Deepest surface — reserved for the immersive 3D experience so the
+        // WebGL environment reads as continuous with the page background.
+        void: '#030407',
         parchment: '#0e1015',
         pearl: '#12151d',
         tile: {
@@ -107,12 +103,16 @@ const config: Config = {
       boxShadow: {
         // Quiet depth: inner top highlight + soft ambient shadow. No neon.
         card: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.04), 0 12px 32px -16px rgba(0, 0, 0, 0.55)',
-        'card-hover':
-          'inset 0 1px 0 0 rgba(255, 255, 255, 0.06), 0 20px 44px -20px rgba(0, 0, 0, 0.65)',
+        'card-hover': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.06), 0 20px 44px -20px rgba(0, 0, 0, 0.65)',
         raised: '0 24px 48px -24px rgba(0, 0, 0, 0.7)',
         modal: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 32px 80px -24px rgba(0, 0, 0, 0.8)',
         // The single allowed glow — primary CTAs and focus moments only.
         'glow-primary': '0 0 0 1px rgba(91, 124, 250, 0.32), 0 6px 28px -8px rgba(91, 124, 250, 0.45)',
+        // Reserved for the immersive experience: proof-verified and privacy moments.
+        'glow-emerald': '0 0 0 1px rgba(52, 211, 153, 0.28), 0 6px 28px -8px rgba(52, 211, 153, 0.4)',
+        'glow-violet': '0 0 0 1px rgba(139, 92, 246, 0.28), 0 6px 28px -8px rgba(139, 92, 246, 0.4)',
+        'veil-panel':
+          'inset 0 1px 0 0 rgba(255, 255, 255, 0.05), inset 0 0 40px -20px rgba(91, 124, 250, 0.25), 0 24px 60px -30px rgba(0, 0, 0, 0.85)',
       },
       maxWidth: {
         content: '1040px',
@@ -129,6 +129,8 @@ const config: Config = {
         'float-slow': 'floatSlow 7s ease-in-out infinite',
         indeterminate: 'indeterminate 1.6s ease-in-out infinite',
         shimmer: 'shimmer 1.8s linear infinite',
+        sweep: 'sweep 6s cubic-bezier(0.16, 1, 0.3, 1) infinite',
+        'ring-expand': 'ringExpand 3.2s cubic-bezier(0.16, 1, 0.3, 1) infinite',
       },
       keyframes: {
         fadeIn: {
@@ -154,6 +156,15 @@ const config: Config = {
         shimmer: {
           '0%': { backgroundPosition: '200% 0' },
           '100%': { backgroundPosition: '-200% 0' },
+        },
+        sweep: {
+          '0%': { transform: 'translateX(-120%)' },
+          '55%, 100%': { transform: 'translateX(120%)' },
+        },
+        ringExpand: {
+          '0%': { transform: 'scale(0.72)', opacity: '0.5' },
+          '70%': { opacity: '0' },
+          '100%': { transform: 'scale(1.5)', opacity: '0' },
         },
       },
     },

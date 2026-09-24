@@ -6,6 +6,10 @@
   html {
     scroll-behavior: smooth;
     color-scheme: dark;
+
+    /* Height the floating navbar occupies when stuck (12px gap + 64px bar).
+       The immersive acts pin below it instead of sliding underneath. */
+    --veil-nav-h: 76px;
   }
 
   body {
@@ -259,4 +263,147 @@
   50% {
     transform: translateY(-8px);
   }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Immersive experience layer
+   Additive only — the tokens above remain the source of truth for
+   every existing route. These utilities exist for the full-bleed 3D
+   scroll story and its glass surfaces.
+   ══════════════════════════════════════════════════════════════ */
+
+@layer components {
+  /* Deepest backdrop: matches the WebGL clear colour so the scene and the
+     page read as one continuous volume. */
+  .veil-void {
+    background-color: #030407;
+  }
+
+  /* Restrained glass — used sparingly, never on every element. */
+  .veil-glass {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: saturate(140%) blur(16px);
+    -webkit-backdrop-filter: saturate(140%) blur(16px);
+  }
+
+  .veil-glass-strong {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    backdrop-filter: saturate(160%) blur(22px);
+    -webkit-backdrop-filter: saturate(160%) blur(22px);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      0 24px 60px -30px rgba(0, 0, 0, 0.85);
+  }
+
+  /* Top hairline highlight — gives a glass edge its "lit from above" read. */
+  .veil-edge::before {
+    content: '';
+    position: absolute;
+    inset-inline: 12%;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+    pointer-events: none;
+  }
+
+  /* Volumetric light cone behind the cryptographic core. */
+  .veil-volumetric {
+    background:
+      radial-gradient(ellipse 46% 38% at 50% 42%, rgba(91, 124, 250, 0.14) 0%, transparent 62%),
+      radial-gradient(ellipse 30% 26% at 50% 44%, rgba(139, 92, 246, 0.1) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 50% at 50% 100%, rgba(52, 211, 153, 0.05) 0%, transparent 70%);
+  }
+
+  /* Subtle gradient noise — kills banding on large dark fills. */
+  .veil-noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.028;
+    mix-blend-mode: overlay;
+  }
+
+  /* Hero headline for the immersive sections — larger than .t-hero. */
+  .t-hero-immersive {
+    @apply font-display font-semibold text-white;
+    font-size: clamp(42px, 7.2vw, 96px);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  .t-section-immersive {
+    @apply font-display font-semibold text-white;
+    font-size: clamp(30px, 4.6vw, 56px);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+  }
+
+  /* Line-mask reveal: each word is clipped and slides up into view. The
+     padding/margin pair keeps descenders (g, y, p) from being cut off. */
+  .reveal-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+
+  /* Gradient-masked horizontal rule used between immersive sections. */
+  .veil-rule {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.12) 22%,
+      rgba(91, 124, 250, 0.2) 50%,
+      rgba(255, 255, 255, 0.12) 78%,
+      transparent
+    );
+  }
+
+  /* Legibility scrim so text always clears the 3D scene. */
+  .veil-scrim {
+    background: radial-gradient(
+      ellipse 70% 60% at 50% 50%,
+      rgba(3, 4, 7, 0.82) 0%,
+      rgba(3, 4, 7, 0.42) 55%,
+      transparent 100%
+    );
+  }
+}
+
+/* Pointer-following glow — desktop only, disabled for reduced motion.
+   Sits above the canvas but below content (z-index 5 vs the sections' z-10) so
+   it lights the environment without ever washing out text. Centred with margins
+   rather than a transform because Framer Motion owns `transform`. */
+.veil-cursor-glow {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  width: 460px;
+  height: 460px;
+  margin: -230px 0 0 -230px;
+  border-radius: 9999px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(91, 124, 250, 0.11) 0%, rgba(139, 92, 246, 0.05) 38%, transparent 68%);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .veil-cursor-glow {
+    display: none;
+  }
+}
+
+/* The immersive canvas sits behind all content and never captures input, so the
+   3D scene can never block a button, link or form control. */
+.veil-canvas-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.veil-canvas-layer canvas {
+  pointer-events: none;
+  display: block;
 }
