@@ -46,6 +46,7 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 | Network | Contract Address | Status | Live dApp / Explorer |
 |:---|:---|:---|:---|
 | **Midnight Preview** | [`0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba`](https://veildraw-pgp-ui.vercel.app/giveaways) | **Active & Live** | [Open in VeilDraw Preview dApp](https://veildraw-pgp-ui.vercel.app/giveaways) |
+| **Midnight Preview (pre-rewrite)** | `445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1` | *Superseded by the rewritten contract above — historical actions at blocks ~511k* | [Query via Indexer GraphQL](https://indexer.preview.midnight.network/api/v4/graphql) |
 | **Midnight Preprod** | Standby | *Preprod dust-ledger sync exceeds RAM limits on local hardware; Preview is the primary live testnet.* | [Preview Indexer API](https://indexer.preview.midnight.network/api/v4/graphql) |
 
 
@@ -299,6 +300,35 @@ npm run preview-remote           # interactive: deploy / join / enter / close / 
 | `cd pgp-ui && npm run build:preview` | Production static export targeting **Preview** Testnet |
 | `cd pgp-ui && npm run build:preprod` | Production static export targeting **Preprod** Testnet |
 | `cd pgp-cli && npm run preview-remote` | CLI: deploy / interact with Preview contract |
+
+### Demo & Test Accounts (Sample Data)
+
+> ⚠️ **Sample data only.** The accounts below are illustrative, off-chain values for exercising the UI locally (entry-portal commitment preview, verification input, claim form). They are **not** on-chain participants, hold no funds, and were never submitted to the contract. Per the privacy model above, no participant list like this can ever exist on-chain — real participants generate secrets on their own device and only opaque 32-byte commitments reach the contract.
+
+Secrets are derived deterministically as `sha256("veildraw-demo-secret-<n>")`; nonces are the first 16 hex chars of `sha256("veildraw-demo-nonce-<n>")`. The commitment column is the local preview the entry portal itself produces from `${secret}:${nonce}` (same derivation as `GiveawayPortal`), not an on-chain value. Regenerate the table with `node scripts/gen-demo-table.mjs`.
+
+| # | Alias | Ticket secret (hex) | Nonce | Entry commitment preview (hex) |
+|:---|:---|:---|:---|:---|
+| 01 | `demo-user-01` | `84d11d5eff2f101ae9e6e25f642e968261399cff316afd0b8b4cffd52aa6e575` | `592bac3823452068` | `804ab016a02c305638dc7814a02ab88ca8ba34e4d062200c804e2846e01cf43e` |
+| 02 | `demo-user-02` | `a3fba120d7183449beb59e0054bdb2110da54c8a6c6f1f47495c52a9ac027286` | `6323869bcfa4fcba` | `7864bca0c0109046e8223c00b02868560092c48ea06c384ac8de78def0045884` |
+| 03 | `demo-user-03` | `a801410f93250161a8f89b62057e2e54cfd60643119d5da9c7f613fe6c2d6b3f` | `2897efa5de41df5b` | `700acc04702a04e6706038ec007a6498504c084af098f056586cb4e6a02828f4` |
+| 04 | `demo-user-04` | `0045f706e7eb84149bf1c2f9eccc2f99e039cc90297be8516afce98b40fd8821` | `c0c8cc33af2992d9` | `00422404b0548058f06a18eeb03668d630ba1450e074f096a86e7c8cc06880a6` |
+| 05 | `demo-user-05` | `406f04c00b33e2c1b9981eb622869458f2ac145677d9d6b9d68bd559a1dd05fa` | `60b369fc6fc294a2` | `c06c00700036f8f6e810bca4e08cb090a09eb0149042c8a6c084cc1ef04804e6` |
+| 06 | `demo-user-06` | `e39ab0f2030bee9f02b7844468e1e2a24803bae8807610c4a28882f1d6aee3a3` | `88742786930aa5ef` | `381a60ec0004f4d400268048a052f85cc00e6c10807c30f8708088eec01afc52` |
+| 07 | `demo-user-07` | `28612b7486dea934947b4385668dabb01895635d873ccc8260bf634ded38e254` | `f0f2a95ee213c073` | `e06a68b8804a34f8f0f4c486a08838a07012241880369c8ca02c2448b030f898` |
+| 08 | `demo-user-08` | `2e37fa12c9f5a3ea3b1cb20210a08a01d77a1e2c939c8c0d440d626123eddd67` | `b872509872b04b8e` | `e8b62cdcd06a3c96509e680cf0108406c8fabcaa70968c08c00828eee058c0ea` |
+| 09 | `demo-user-09` | `7545e07faa0eac9ee8024a9c4632648cbebb2f322052a05d74d149ffe215976d` | `70b1c08f12b02f94` | `184270b4f00a3cde3004cc5ac0342082e824687ce0543098104acce4b01abce8` |
+| 10 | `demo-user-10` | `2502b8dce5375c8e5ab37d5c0ddb22f5d6f2e3aad30b3da128f6c4cf659fb45a` | `104d37d43c9e62ff` | `e804604ab03efc8e382ed01a004468eec06474dec0049056e06c1074a09c6096` |
+| 11 | `demo-user-11` | `58e89c619375d9321f7c1c0a6328b86f2b9c1be7db515eb3a9594066c8580862` | `486039fa99ac6dda` | `30d034ee707ac4fc70feb40ea02060e4e01eb812c052f4a278dac0e4d05000ec` |
+| 12 | `demo-user-12` | `d25e0488f582ccc28e44d28ea0fb0466c5487961ea50476dc7c412df07947418` | `30f8ae832d0a6d9b` | `c0d20080a0849cfc8848c886f06400e45840dceeb050cce858b8b84400985050` |
+| 13 | `demo-user-13` | `9d540e6daae103d9fa84b5b03ef1b3467451c9deb63a0f94bc8871ad59da8962` | `10cd7a665050d20b` | `f0d80ce8f0520c46a8886ca0d0626c4410da1c46e03208d8e880dcd8b04284ec` |
+| 14 | `demo-user-14` | `4bd6dfa741d03b0aaa5e0c38ee742def39887ec35860be44968454f6cd4162d5` | `3dbdea4d769d17f2` | `c04cc8d2c040980678d20470b07860945880dc7ab0606448f08870e4d042284e` |
+| 15 | `demo-user-15` | `105f8eeff9d91852f61e40c29c3d6fce26fa46f2033848bff9922d8b78bbfc98` | `74c086a027800923` | `70dc8c14a042309ca092c07c703828fee06ac8ec0030c0a4a814608c90242cd0` |
+| 16 | `demo-user-16` | `aeb92b6c244a4660d60cbf9354801dd924de4fe5a788355037ed2693b5cbce88` | `29b23202c5c72601` | `782a68eae042c8e0c00e685ab0803046e042c816f080949058d8685ae0349480` |
+| 17 | `demo-user-17` | `43cf17949ea29b49ab6076e001681ba82b2d4d4a7d804fc4c3d1101a8019fdea` | `d4e33d9d37b8fa74` | `c8bcb4587014b8467060d81000603850e028c04e9080c8f8584ab0de80122096` |
+| 18 | `demo-user-18` | `d6cb6f44034c560cddca22aa717eb8d7cb4a3cb1da9db54fcb759fbb59ae5d25` | `354522fcd2db7fdf` | `c0b428480046f802c0ba68de907a604a504a14aec098644450f238acb01af0ae` |
+| 19 | `demo-user-19` | `3c13825a46ee5c6c0cbbd5f5e75e9454a2dff57138f64b259a05b4316a85275b` | `6f02a894c12e2d78` | `589e881ec05afce20824cce6b05ab098704c2cbed06cc8aef802607ea08a6c9c` |
+| 20 | `demo-user-20` | `34986f693dcb43c4fb4b38a88c5fadfae50cbd85d27dd884a9bd2575971f1b5f` | `ec8795dcc0de734c` | `501028eed034ccf8a04410d0805c30e6380e6086c078c08878286cb6701c3894` |
 
 ---
 
