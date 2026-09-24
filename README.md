@@ -15,7 +15,36 @@
 
 [**Live dApp →**](https://veildraw-pgp-ui.vercel.app/) · [**Video walkthrough →**](https://youtu.be/meczmnhMPWo) · [**Contract on Preview →**](#on-chain-deployment)
 
-### 🌐 Live Demo & Quick Links
+</div>
+
+---
+
+## Contents
+
+- [Overview](#overview)
+- [Privacy Model](#privacy-model)
+- [How It Works](#how-it-works)
+- [App Screenshots](#app-screenshots)
+- [On-Chain Deployment](#on-chain-deployment)
+- [App Architecture](#app-architecture)
+- [Quick Start](#quick-start)
+- [Demo and Test Accounts (Sample Data)](#demo-and-test-accounts-sample-data)
+- [Tests and CI/CD](#tests-and-cicd)
+- [Rise In Level 3 Checklist](#rise-in-level-3-checklist)
+- [Level History](#level-history)
+- [Repository and Links](#repository-and-links)
+
+---
+
+## Overview
+
+VeilDraw is a privacy-preserving giveaway platform built on [Midnight](https://midnight.network). Organizers escrow prizes in a Compact smart contract; participants enter with locally-generated ZK commitments; winners claim prizes by proving ticket ownership in zero knowledge — no wallet addresses, identities, or entry lists are ever published on-chain.
+
+The frontend is a premium **Next.js 15** static dApp (React 19, Tailwind, Framer Motion, shadcn/ui) with an immersive scroll-driven 3D story. It reads live state from the Midnight indexer and connects to Lace / 1AM wallets through the official DApp Connector API (CAIP-372).
+
+This project is deployed against the **Midnight Preview Testnet** and is submitted for the **Rise In × Midnight "New Moon to Full" program — Level 3 (First Quarter): Production-Grade dApp**.
+
+### Live Demo and Quick Links
 
 | Resource | Link | Description |
 |:---|:---|:---|
@@ -28,17 +57,81 @@
 | **Midnight Preview Faucet** | [faucet.preview.midnight.network](https://faucet.preview.midnight.network/) | Get testnet tNIGHT tokens |
 | **Official X (Twitter)** | [@VeilDraww](https://x.com/VeilDraww) | Official project updates & announcements |
 
-</div>
+---
+
+## Privacy Model
+
+The contract maintains a ZK accumulator tree of private entry commitments and accepts a private witness (ticket secret) that must match the organizer-selected winning commitment before the prize can be claimed.
+
+| | What it includes |
+|:---|:---|
+| **PUBLIC** (on-chain, visible to anyone) | The entry accumulator state, entry count, winning commitment hash, and winner-claimed status |
+| **PRIVATE** (local witness, never published) | The participant's ticket secret, nonce, and secret key — generated and held on the user's device |
+| **PROVEN without revealing** | That the ticket secret hashes to the winning commitment and the claim transition is valid — via `persistentHash` inside the ZK circuit |
+
+The UI surfaces proof status and on-chain results only; raw secrets never leave the device.
 
 ---
 
-## Overview
+## How It Works
 
-VeilDraw is a privacy-preserving giveaway platform built on [Midnight](https://midnight.network). Organizers escrow prizes in a Compact smart contract; participants enter with locally-generated ZK commitments; winners claim prizes by proving ticket ownership in zero knowledge — no wallet addresses, identities, or entry lists are ever published on-chain.
+```mermaid
+sequenceDiagram
+  actor O as Organizer
+  actor P as Participant
+  actor W as Winner
+  actor V as Verifier
+  participant CLI as pgp-cli + proof server
+  participant UI as VeilDraw (browser)
+  participant C as VeilDraw Contract (on-chain)
 
-The frontend is a premium **Next.js 15** static dApp (React 19, Tailwind, Framer Motion, shadcn/ui) that reads live state from the Midnight indexer and connects to Lace / 1AM wallets through the official DApp Connector API (CAIP-372).
+  O->>CLI: deploy + createGiveaway(title, prize)
+  CLI->>C: escrow prize, open entries
+  P->>P: generate ticket secret locally
+  P->>UI: connect wallet, enter giveaway
+  UI->>C: enterGiveaway — only hash(secret, nonce) published
+  O->>CLI: closeAndSelectWinner(winningCommitment)
+  CLI->>C: disclose winning commitment hash
+  W->>UI: claimPrize with private ticket secret
+  UI->>C: ZK proof: hash(secret) == winningCommitment
+  C-->>W: prize released — no address linkage on-chain
+  V->>UI: enter ticket to verify
+  V->>C: compare disclosed commitment on-chain
+```
 
-This project is deployed against the **Midnight Preview Testnet** and is submitted for the **Rise In × Midnight "New Moon to Full" program — Level 3 (First Quarter): Production-Grade dApp**.
+1. **Organizer** deploys the contract and creates a giveaway; the prize is escrowed.
+2. **Participant** connects Lace/1AM, generates a ticket secret in-browser, and submits only the commitment hash.
+3. **Organizer** closes entries and selects the winning commitment off-chain.
+4. **Winner** proves ticket ownership in zero knowledge and claims — the chain never learns which address won.
+5. **Verifier** (anyone) can independently confirm a winning ticket against the disclosed commitment.
+
+---
+
+## App Screenshots
+
+### Desktop (1440×900)
+
+| Home — 3D draw-pool hero | Scroll story — pipeline act |
+|:---:|:---:|
+| ![Desktop home](docs/screenshots/desktop_home.png) | ![Desktop scroll story](docs/screenshots/desktop_story.png) |
+
+| Giveaways | Dashboard |
+|:---:|:---:|
+| ![Desktop giveaways](docs/screenshots/desktop_giveaways.png) | ![Desktop dashboard](docs/screenshots/desktop_dashboard.png) |
+
+| Winner Verification | Organizer Console |
+|:---:|:---:|
+| ![Desktop verify](docs/screenshots/desktop_verify.png) | ![Desktop organizer](docs/screenshots/desktop_organizer.png) |
+
+| Analytics | Settings |
+|:---:|:---:|
+| ![Desktop analytics](docs/screenshots/desktop_analytics.png) | ![Desktop settings](docs/screenshots/desktop_settings.png) |
+
+### Mobile (390×844)
+
+| Home | Dashboard | Giveaways |
+|:---:|:---:|:---:|
+| ![Mobile home](docs/screenshots/mobile_home.png) | ![Mobile dashboard](docs/screenshots/mobile_dashboard.png) | ![Mobile giveaways](docs/screenshots/mobile_giveaways.png) |
 
 ---
 
@@ -49,7 +142,6 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 | **Midnight Preview** | [`0ec3244220040ce3538fd34bb22d6de29a2174bdb7d94b3f52ffc18829ef1fba`](https://veildraw-pgp-ui.vercel.app/giveaways) | **Active & Live** | [Open in VeilDraw Preview dApp](https://veildraw-pgp-ui.vercel.app/giveaways) |
 | **Midnight Preview (pre-rewrite)** | `445563f8b0fa114ba33cde6a66f6de928de1f2a7bbe55a89ab4033d0b4dfe4b1` | *Superseded by the rewritten contract above — historical actions at blocks ~511k* | [Query via Indexer GraphQL](https://indexer.preview.midnight.network/api/v4/graphql) |
 | **Midnight Preprod** | Standby | *Preprod dust-ledger sync exceeds RAM limits on local hardware; Preview is the primary live testnet.* | [Preview Indexer API](https://indexer.preview.midnight.network/api/v4/graphql) |
-
 
 ### Deployment Details (Preview Testnet)
 
@@ -70,20 +162,6 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 | **Preview Indexer GraphQL** | [`https://indexer.preview.midnight.network/api/v4/graphql`](https://indexer.preview.midnight.network/api/v4/graphql) | Live query interface for on-chain contract state |
 | **Preview Indexer WebSocket** | `wss://indexer.preview.midnight.network/api/v4/graphql/ws` | Real-time state subscription stream |
 | **Preview Faucet Portal** | [`https://faucet.preview.midnight.network/`](https://faucet.preview.midnight.network/) | Testnet tNIGHT faucet for wallet funding |
-
----
-
-## Privacy Model
-
-The contract maintains a ZK accumulator tree of private entry commitments and accepts a private witness (ticket secret) that must match the organizer-selected winning commitment before the prize can be claimed.
-
-| | What it includes |
-|:---|:---|
-| **PUBLIC** (on-chain, visible to anyone) | The entry accumulator state, entry count, winning commitment hash, and winner-claimed status |
-| **PRIVATE** (local witness, never published) | The participant's ticket secret, nonce, and secret key — generated and held on the user's device |
-| **PROVEN without revealing** | That the ticket secret hashes to the winning commitment and the claim transition is valid — via `persistentHash` inside the ZK circuit |
-
-The UI surfaces proof status and on-chain results only; raw secrets never leave the device.
 
 ---
 
@@ -137,131 +215,15 @@ veildraw/
 │   └── src/             #   launchers: preview.ts, preprod.ts, standalone.ts
 ├── pgp-ui/              # Next.js 15 App Router static dApp
 │   ├── app/             #   routes: / /dashboard /giveaways /verify /organizer /analytics /settings
-│   ├── components/      #   views, layout, modals (Wallet, Transaction)
-│   ├── lib/             #   store, network config, types, utils
+│   ├── components/      #   views, layout, modals (Wallet, Transaction), 3D scene, motion
+│   ├── lib/             #   store, network config, scene bridge, types, utils
 │   └── utils/           #   midnightWallet (connector), midnightService (indexer)
+├── scripts/             # docs helpers (demo-table generator)
 ├── .github/workflows/   # ci.yml — CI/CD pipeline
 ├── docs/screenshots/    # desktop + mobile captures
 ├── vercel.json          # CD: auto-deploy to Vercel on main
 └── PROPOSAL.md          # product proposal
 ```
-
----
-
-## How It Works
-
-```mermaid
-sequenceDiagram
-  actor O as Organizer
-  actor P as Participant
-  actor W as Winner
-  actor V as Verifier
-  participant CLI as pgp-cli + proof server
-  participant UI as VeilDraw (browser)
-  participant C as VeilDraw Contract (on-chain)
-
-  O->>CLI: deploy + createGiveaway(title, prize)
-  CLI->>C: escrow prize, open entries
-  P->>P: generate ticket secret locally
-  P->>UI: connect wallet, enter giveaway
-  UI->>C: enterGiveaway — only hash(secret, nonce) published
-  O->>CLI: closeAndSelectWinner(winningCommitment)
-  CLI->>C: disclose winning commitment hash
-  W->>UI: claimPrize with private ticket secret
-  UI->>C: ZK proof: hash(secret) == winningCommitment
-  C-->>W: prize released — no address linkage on-chain
-  V->>UI: enter ticket to verify
-  V->>C: compare disclosed commitment on-chain
-```
-
-1. **Organizer** deploys the contract and creates a giveaway; the prize is escrowed.
-2. **Participant** connects Lace/1AM, generates a ticket secret in-browser, and submits only the commitment hash.
-3. **Organizer** closes entries and selects the winning commitment off-chain.
-4. **Winner** proves ticket ownership in zero knowledge and claims — the chain never learns which address won.
-5. **Verifier** (anyone) can independently confirm a winning ticket against the disclosed commitment.
-
----
-
-## App Screenshots
-
-### Desktop (1440px)
-
-| Home | Dashboard |
-|:---:|:---:|
-| ![Desktop home](docs/screenshots/desktop_home.png) | ![Desktop dashboard](docs/screenshots/desktop_dashboard.png) |
-
-| Giveaways | Analytics |
-|:---:|:---:|
-| ![Desktop giveaways](docs/screenshots/desktop_giveaways.png) | ![Desktop analytics](docs/screenshots/desktop_analytics.png) |
-
-| Winner Verification | Organizer Console |
-|:---:|:---:|
-| ![Desktop verify](docs/screenshots/desktop_verify.png) | ![Desktop organizer](docs/screenshots/desktop_organizer.png) |
-
-| Settings | |
-|:---:|:---:|
-| ![Desktop settings](docs/screenshots/desktop_settings.png) | |
-
-### Mobile (390×844)
-
-| Home | Dashboard | Giveaways |
-|:---:|:---:|:---:|
-| ![Mobile home](docs/screenshots/mobile_home.png) | ![Mobile dashboard](docs/screenshots/mobile_dashboard.png) | ![Mobile giveaways](docs/screenshots/mobile_giveaways.png) |
-
----
-
-## Rise In Level 3 Checklist
-
-Level 3 (First Quarter) of the ["New Moon to Full" program](https://www.risein.com/programs/new-moon-to-full-monthly-moonshots-on-midnight) requires a **polished dApp**, **tests**, **CI/CD**, and a problem picked from the provided list (privacy-preserving on-chain verification). Status:
-
-| Requirement | Status |
-|-------------|--------|
-| Polished, production-grade dApp | ✅ Next.js 15 premium UI — animated hero, scroll reveals, marquee, frosted sub-nav, pill CTAs; fully responsive (desktop + mobile screenshots above) |
-| 3+ meaningful tests (circuit / state / privacy) | ✅ **17 Vitest tests** in [`contract/test/pgp.test.ts`](contract/test/pgp.test.ts) |
-| CI/CD pipeline on push to main | ✅ [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — typecheck → lint → test → build (4 workspaces) → Vercel deploy |
-| CI badge in README | ✅ Top of this file |
-| Contract address in README, verifiable on-chain | ✅ Preview address + deploy tx + block height above |
-| Privacy model documented | ✅ Privacy Model section above |
-| UI reads real on-chain state | ✅ Indexer GraphQL/WS subscription — no simulated transactions |
-| Real wallet integration | ✅ Lace / 1AM via `@midnight-ntwrk/dapp-connector-api` (CAIP-372) |
-| dApp builds with zero errors | ✅ `npm run build` green across all workspaces |
-| Product proposal | ✅ [PROPOSAL.md](PROPOSAL.md) |
-| Problem statement addressed | ✅ Private, verifiable giveaways — ZK winner selection without identity disclosure |
-
----
-
-## Tests and CI/CD
-
-### Test Suite
-
-17 tests covering: pure circuit behavior, witness extraction privacy, private-state isolation, state-machine constraints, compiled contract shape, and publicKey determinism.
-
-```bash
-npm test --workspace=@midnight-ntwrk/pgp-contract -- --run
-```
-
-### CI/CD
-
-**CI** runs on every push to `main`/`dev` and every PR: checkout → Node 24 → install → contract typecheck → contract lint → unit tests → build contract, API, CLI, and UI workspaces.
-
-**CD** deploys the UI to Vercel on every push to `main` (`vercel.json`), live at [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) targeting the **Midnight Preview Testnet**.
-
----
-
-## Level History
-
-### Level 1 — New Moon: Setup & First Contract
-
-Compact contract with a ZK entry accumulator, local Vitest suite, and testnet deployment with documented privacy behavior. Tech: Compact, Node 24, Docker proof server.
-
-### Level 2 — Waxing Crescent: Frontend Integration
-
-Contract wired to a browser UI with Lace/1AM connect + disconnect via the DApp Connector API, circuit calls (`enterGiveaway`, `closeAndSelectWinner`, `claimPrize`) with honest error handling, and local private-state management.
-
-### Level 3 — First Quarter: Production-Grade dApp *(this submission)*
-
-- Rebuilt the frontend as a **Next.js 15 App Router** static export with a premium, animated, fully responsive design system.
-- Full test suite, CI/CD pipeline, Vercel CD, live on-chain state, architecture & user-flow documentation, desktop + mobile screenshots.
 
 ---
 
@@ -304,6 +266,8 @@ npm run preview-remote           # interactive: deploy / join / enter / close / 
 | `cd pgp-ui && npm run build:preprod` | Production static export targeting **Preprod** Testnet |
 | `cd pgp-cli && npm run preview-remote` | CLI: deploy / interact with Preview contract |
 
+---
+
 ## Demo and Test Accounts (Sample Data)
 
 > ⚠️ **Sample data only.** The accounts below are illustrative, off-chain values for exercising the UI locally (entry-portal commitment preview, verification input, claim form). They are **not** on-chain participants, hold no funds, and were never submitted to the contract. Per the privacy model above, no participant list like this can ever exist on-chain — real participants generate secrets on their own device and only opaque 32-byte commitments reach the contract.
@@ -332,6 +296,61 @@ Secrets are derived deterministically as `sha256("veildraw-demo-secret-<n>")`; n
 | 18 | `demo-user-18` | `d6cb6f44034c560cddca22aa717eb8d7cb4a3cb1da9db54fcb759fbb59ae5d25` | `354522fcd2db7fdf` | `c0b428480046f802c0ba68de907a604a504a14aec098644450f238acb01af0ae` |
 | 19 | `demo-user-19` | `3c13825a46ee5c6c0cbbd5f5e75e9454a2dff57138f64b259a05b4316a85275b` | `6f02a894c12e2d78` | `589e881ec05afce20824cce6b05ab098704c2cbed06cc8aef802607ea08a6c9c` |
 | 20 | `demo-user-20` | `34986f693dcb43c4fb4b38a88c5fadfae50cbd85d27dd884a9bd2575971f1b5f` | `ec8795dcc0de734c` | `501028eed034ccf8a04410d0805c30e6380e6086c078c08878286cb6701c3894` |
+
+---
+
+## Tests and CI/CD
+
+### Test Suite
+
+17 tests covering: pure circuit behavior, witness extraction privacy, private-state isolation, state-machine constraints, compiled contract shape, and publicKey determinism.
+
+```bash
+npm test --workspace=@midnight-ntwrk/pgp-contract -- --run
+```
+
+### CI/CD
+
+**CI** runs on every push to `main`/`dev` and every PR: checkout → Node 24 → install → contract typecheck → contract lint → unit tests → build contract, API, CLI, and UI workspaces.
+
+**CD** deploys the UI to Vercel on every push to `main` (`vercel.json`), live at [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) targeting the **Midnight Preview Testnet**.
+
+---
+
+## Rise In Level 3 Checklist
+
+Level 3 (First Quarter) of the ["New Moon to Full" program](https://www.risein.com/programs/new-moon-to-full-monthly-moonshots-on-midnight) requires a **polished dApp**, **tests**, **CI/CD**, and a problem picked from the provided list (privacy-preserving on-chain verification). Status:
+
+| Requirement | Status |
+|-------------|--------|
+| Polished, production-grade dApp | ✅ Next.js 15 premium UI — 3D scroll story, animated hero, scroll reveals, frosted sub-nav, pill CTAs; fully responsive (see [screenshots](#app-screenshots)) |
+| 3+ meaningful tests (circuit / state / privacy) | ✅ **17 Vitest tests** in [`contract/test/pgp.test.ts`](contract/test/pgp.test.ts) |
+| CI/CD pipeline on push to main | ✅ [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — typecheck → lint → test → build (4 workspaces) → Vercel deploy |
+| CI badge in README | ✅ Top of this file |
+| Contract address in README, verifiable on-chain | ✅ [Preview address + deploy tx + block height](#on-chain-deployment) |
+| Privacy model documented | ✅ [Privacy Model](#privacy-model) section |
+| UI reads real on-chain state | ✅ Indexer GraphQL/WS subscription — no simulated transactions |
+| Real wallet integration | ✅ Lace / 1AM via `@midnight-ntwrk/dapp-connector-api` (CAIP-372) |
+| dApp builds with zero errors | ✅ `npm run build` green across all workspaces |
+| Product proposal | ✅ [PROPOSAL.md](PROPOSAL.md) |
+| Problem statement addressed | ✅ Private, verifiable giveaways — ZK winner selection without identity disclosure |
+
+---
+
+## Level History
+
+### Level 1 — New Moon: Setup & First Contract
+
+Compact contract with a ZK entry accumulator, local Vitest suite, and testnet deployment with documented privacy behavior. Tech: Compact, Node 24, Docker proof server.
+
+### Level 2 — Waxing Crescent: Frontend Integration
+
+Contract wired to a browser UI with Lace/1AM connect + disconnect via the DApp Connector API, circuit calls (`enterGiveaway`, `closeAndSelectWinner`, `claimPrize`) with honest error handling, and local private-state management.
+
+### Level 3 — First Quarter: Production-Grade dApp *(this submission)*
+
+- Rebuilt the frontend as a **Next.js 15 App Router** static export with a premium, animated, fully responsive design system and an immersive scroll-driven 3D story.
+- Full test suite, CI/CD pipeline, Vercel CD, live on-chain state, architecture & user-flow documentation, desktop + mobile screenshots.
 
 ---
 
