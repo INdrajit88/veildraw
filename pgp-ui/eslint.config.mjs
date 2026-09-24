@@ -35,6 +35,17 @@ const config = tseslint.config(
       },
     },
   },
+  {
+    // React Three Fiber extends JSX with Three.js intrinsics (<points>,
+    // <bufferGeometry>, <bufferAttribute>, <instancedMesh>) and material props
+    // (args, attach, emissive, wireframe, …) that react/no-unknown-property has
+    // never heard of. Scoped to the 3D layer so the rest of the app keeps the
+    // check.
+    files: ['components/3d/**/*.{ts,tsx}'],
+    rules: {
+      'react/no-unknown-property': 'off',
+    },
+  },
 );
 
 export default config;

@@ -1,6 +1,5 @@
 'use client';
 
-/* eslint-disable react/no-unknown-property -- R3F extended JSX intrinsics (args, emissive, attach, …) */
 import React, { useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
