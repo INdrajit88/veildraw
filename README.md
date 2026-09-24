@@ -13,7 +13,7 @@
 
 **Giveaways without exposing your identity.** Organizers escrow prizes in a Compact smart contract, participants enter with locally-generated ZK commitments, and winners claim by proving ticket ownership in zero knowledge — no wallet addresses, identities, or entry lists are ever published on-chain.
 
-[**Live dApp →**](https://veildraw-pgp-ui.vercel.app/) · [**Video walkthrough →**](https://youtu.be/meczmnhMPWo) · [**Contract on Preview →**](https://indexer.preview.midnight.network/api/v4/graphql)
+[**Live dApp →**](https://veildraw-pgp-ui.vercel.app/) · [**Video walkthrough →**](https://youtu.be/meczmnhMPWo) · [**Contract on Preview →**](#on-chain-deployment)
 
 ### 🌐 Live Demo & Quick Links
 
@@ -42,7 +42,7 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 
 ---
 
-## Contract Address & Deployment
+## On-Chain Deployment
 
 | Network | Contract Address | Status | Live dApp / Explorer |
 |:---|:---|:---|:---|
@@ -51,7 +51,7 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 | **Midnight Preprod** | Standby | *Preprod dust-ledger sync exceeds RAM limits on local hardware; Preview is the primary live testnet.* | [Preview Indexer API](https://indexer.preview.midnight.network/api/v4/graphql) |
 
 
-### On-Chain Deployment Details (Preview Testnet)
+### Deployment Details (Preview Testnet)
 
 | Deployment Fact | Value | Verification Link |
 |:---|:---|:---|
@@ -62,7 +62,7 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 | **Create-Giveaway Tx** | `a4fe5727b4277677a167c64b494a1d7577a84551cd0fbf3eb5e6dc4167c58101` (Block `606,157`) | [Query via Indexer GraphQL](https://indexer.preview.midnight.network/api/v4/graphql) |
 | **Organizer Wallet** | `mn_addr_preview1lps20dj6gj6fdpnvlz7vj7tlqgdevrnewukkl656d5wl07ft95ksg42xe3` | [Preview Faucet Portal](https://faucet.preview.midnight.network/) |
 
-### Network Infrastructure & Verification Endpoints
+### Network Infrastructure and Verification Endpoints
 
 | Service | Endpoint URL | Purpose |
 |:---|:---|:---|
@@ -77,14 +77,13 @@ This project is deployed against the **Midnight Preview Testnet** and is submitt
 
 The contract maintains a ZK accumulator tree of private entry commitments and accepts a private witness (ticket secret) that must match the organizer-selected winning commitment before the prize can be claimed.
 
-**What is PUBLIC (on-chain, visible to anyone):**
-- The entry accumulator state, entry count, winning commitment hash, and winner-claimed status.
+| | What it includes |
+|:---|:---|
+| **PUBLIC** (on-chain, visible to anyone) | The entry accumulator state, entry count, winning commitment hash, and winner-claimed status |
+| **PRIVATE** (local witness, never published) | The participant's ticket secret, nonce, and secret key — generated and held on the user's device |
+| **PROVEN without revealing** | That the ticket secret hashes to the winning commitment and the claim transition is valid — via `persistentHash` inside the ZK circuit |
 
-**What is PRIVATE (local / private witness, never published):**
-- The participant's ticket secret, nonce, and secret key — generated and held on the user's device.
-
-**What the user PROVES without revealing:**
-- That their ticket secret hashes to the winning commitment, and that the claim transition is valid — via `persistentHash` inside the ZK circuit. The UI surfaces proof status and on-chain results only; raw secrets never leave the device.
+The UI surfaces proof status and on-chain results only; raw secrets never leave the device.
 
 ---
 
@@ -149,7 +148,7 @@ veildraw/
 
 ---
 
-## User Flow
+## How It Works
 
 ```mermaid
 sequenceDiagram
@@ -183,7 +182,7 @@ sequenceDiagram
 
 ---
 
-## Screenshots
+## App Screenshots
 
 ### Desktop (1440px)
 
@@ -211,9 +210,9 @@ sequenceDiagram
 
 ---
 
-## Rise In "New Moon to Full" — Level 3 Checklist
+## Rise In Level 3 Checklist
 
-Level 3 (First Quarter) requires a **polished dApp**, **tests**, **CI/CD**, and a problem picked from the provided list (privacy-preserving on-chain verification). Status:
+Level 3 (First Quarter) of the ["New Moon to Full" program](https://www.risein.com/programs/new-moon-to-full-monthly-moonshots-on-midnight) requires a **polished dApp**, **tests**, **CI/CD**, and a problem picked from the provided list (privacy-preserving on-chain verification). Status:
 
 | Requirement | Status |
 |-------------|--------|
@@ -229,6 +228,10 @@ Level 3 (First Quarter) requires a **polished dApp**, **tests**, **CI/CD**, and 
 | Product proposal | ✅ [PROPOSAL.md](PROPOSAL.md) |
 | Problem statement addressed | ✅ Private, verifiable giveaways — ZK winner selection without identity disclosure |
 
+---
+
+## Tests and CI/CD
+
 ### Test Suite
 
 17 tests covering: pure circuit behavior, witness extraction privacy, private-state isolation, state-machine constraints, compiled contract shape, and publicKey determinism.
@@ -242,7 +245,6 @@ npm test --workspace=@midnight-ntwrk/pgp-contract -- --run
 **CI** runs on every push to `main`/`dev` and every PR: checkout → Node 24 → install → contract typecheck → contract lint → unit tests → build contract, API, CLI, and UI workspaces.
 
 **CD** deploys the UI to Vercel on every push to `main` (`vercel.json`), live at [veildraw-pgp-ui.vercel.app](https://veildraw-pgp-ui.vercel.app/) targeting the **Midnight Preview Testnet**.
-
 
 ---
 
@@ -302,7 +304,7 @@ npm run preview-remote           # interactive: deploy / join / enter / close / 
 | `cd pgp-ui && npm run build:preprod` | Production static export targeting **Preprod** Testnet |
 | `cd pgp-cli && npm run preview-remote` | CLI: deploy / interact with Preview contract |
 
-### Demo & Test Accounts (Sample Data)
+## Demo and Test Accounts (Sample Data)
 
 > ⚠️ **Sample data only.** The accounts below are illustrative, off-chain values for exercising the UI locally (entry-portal commitment preview, verification input, claim form). They are **not** on-chain participants, hold no funds, and were never submitted to the contract. Per the privacy model above, no participant list like this can ever exist on-chain — real participants generate secrets on their own device and only opaque 32-byte commitments reach the contract.
 
@@ -333,7 +335,7 @@ Secrets are derived deterministically as `sha256("veildraw-demo-secret-<n>")`; n
 
 ---
 
-## Repository & Links
+## Repository and Links
 
 - **X (Twitter):** [@VeilDraww](https://x.com/VeilDraww)
 - **GitHub:** [github.com/INdrajit88/veildraw](https://github.com/INdrajit88/veildraw)
